@@ -13,4 +13,4 @@ Users will be given the option to create an empty piece of land of specified siz
 
 Users can add predefined feature blocks to their regions, such as mountains, rivers, or lakes, or they can define custom features. Feature blocks have a fixed size and can be placed at points within a region. To place multiple blocks of the same feature in close proximity, the implementation will use loops. For example, a mountain range can be made by placing multiple mountain blocks in a line using a loop.
 
-After consulting with our TA we aim to give users as much control as possible, thereby reducing the amount of randomization required in the backend.
+After consulting with our TA we aim to give users as much control as possible, thereby reducing the amount of randomization required in the backend. Our TA also suggested that we use loops to place multiple blocks of the same feature and allow the user to create custom definitions for features. These suggestions have been incorporated into the DSL.
