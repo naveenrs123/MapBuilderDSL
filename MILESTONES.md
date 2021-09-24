@@ -103,7 +103,6 @@ PLACE REGION grass with NAME Death Valley and SHAPE UNDEFINED SPACE
 #end region
 
 #start function definitions
-
 DEFINE FUNCTION makeMountains (x_start x_stop y_start y_stop)
 
     DEFINE FEATURE "mountain" ‘with ICON’ "mountain" ‘and SIZE’ 1
