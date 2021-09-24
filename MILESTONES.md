@@ -77,20 +77,21 @@ We have drafted a roadmap, the grammar, as well as created a mock of the input a
 Create Map <br />
 #end map <br />
 
-#start region
-Place Regions
-#end region
+#start region <br />
+Place Regions <br />
+#end region <br />
 
-#start function definitions
-Function Definition Block
-#end function definitions
+#start function definitions <br />
+Function Definition Block <br />
+#end function definitions <br />
 
-#start features and calls
-Place Features/Function Calls
-#end features and calls
+#start features and calls <br />
+Place Features/Function Calls <br />
+#end features and calls <br />
 
 ### Sample Input
 
+```
 #start map
 CREATE MAP Cool Map of SIZE 8x8 and COLOR #00FF80
 #end map
@@ -102,6 +103,7 @@ PLACE REGION grass with NAME Death Valley and SHAPE UNDEFINED SPACE
 #end region
 
 #start function definitions
+
 DEFINE FUNCTION makeMountains (x_start x_stop y_start y_stop)
 
     DEFINE FEATURE "mountain" ‘with ICON’ "mountain" ‘and SIZE’ 1
@@ -128,6 +130,7 @@ END FUNCTION
 #start features and calls
 CALL FUNCTION makeMountains(3 6 6 3)
 #end features and calls
+```
 
 ### Sample Output
 
@@ -136,6 +139,8 @@ See "MapOutputExample" image in repo.
 ### Other Notes
 
 We will have a predefined list of icons the user can choose from. There will be a generic icon the user can use if no other icons are appropriate.
+
+---
 
 # Milestone 1
 
