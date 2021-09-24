@@ -52,9 +52,9 @@ We have drafted a roadmap, the grammar, as well as created a mock of the input a
 **function_call:** ‘CALL FUNCTION’ TEXT ‘(‘ TEXT\* ‘)’; <br />
 **variable:** TEXT '=' (TEXT | math); <br />
 **conditional:** 'if' TEXT comparison_operator TEXT; <br />
-**comparison_operator:** "==" | ">" | "<" | "<=" | ">=" | "!="; <br />
+**comparison_operator:** '==' | '>' | '<' | '<=' | '>=' | '!='; <br />
 **math:** (NUM | TEXT) math_operator (NUM | TEXT); <br />
-**math_operator:** "+" | "-" | "/" | "\*"; <br />
+**math_operator:** '+' | '-' | '/' | '\*'; <br />
 
 **region:** ‘grass’ | ‘desert’ | ‘forest’ | ‘water’ | ‘snow’ | ‘ocean’; <br />
 **shape:** circle | rectangle | triangle | ‘UNDEFINED SPACE’; <br />
@@ -105,7 +105,7 @@ PLACE REGION grass with NAME Death Valley and SHAPE UNDEFINED SPACE
 #start function definitions
 DEFINE FUNCTION makeMountains (x_start x_stop y_start y_stop)
 
-    DEFINE FEATURE "mountain" ‘with ICON’ "mountain" ‘and SIZE’ 1
+    DEFINE FEATURE mountain ‘with ICON’ mountain ‘and SIZE’ 1
 
     counter = y_start
 
@@ -115,7 +115,7 @@ DEFINE FUNCTION makeMountains (x_start x_stop y_start y_stop)
 
             if Y == counter
 
-                PLACE FEATURE "mountain" ‘with NAME’ "Rockies" ‘at LOCATION’ [X,Y] ‘on’ "map";
+                PLACE FEATURE mountain ‘with NAME’ Rockies ‘at LOCATION’ [X,Y] ‘on’ map;
 
         END LOOP loop2
 
@@ -133,7 +133,7 @@ CALL FUNCTION makeMountains(3 6 6 3)
 
 ### Sample Output
 
-See "MapOutputExample" image in repo.
+See 'MapOutputExample' image in repo.
 
 ### Other Notes
 
