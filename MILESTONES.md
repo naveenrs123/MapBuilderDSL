@@ -29,53 +29,53 @@ We have drafted a roadmap, the grammar, as well as created a mock of the input a
 
 ## Grammar
 
-**program:** map region_section? func_def? feature_and_call_section?;
-**map:** ‘#start map’ create_map ‘#end map’;
-**region_section:** ‘#start region’ place_region+ ‘#end region’;
-**func_def:** ‘#start function definitions’ function+ ‘#end function definitions’;
-**feature_and_call_section:** ‘#start features and calls’ statement+ ‘#end features and calls’;
+**program:** map region_section? func_def? feature_and_call_section?; <br />
+**map:** ‘#start map’ create_map ‘#end map’; <br />
+**region_section:** ‘#start region’ place_region+ ‘#end region’; <br />
+**func_def:** ‘#start function definitions’ function+ ‘#end function definitions’; <br />
+**feature_and_call_section:** ‘#start features and calls’ statement+ ‘#end features and calls’; <br />
 
-**function:** function_start (statement | loop)+ function_end;
-**function_start:** ‘DEFINE FUNCTION’ TEXT ‘(‘ TEXT\* ‘)’;
-**function_end:** ‘END FUNCTION’;
+**function:** function_start (statement | loop)+ function_end; <br />
+**function_start:** ‘DEFINE FUNCTION’ TEXT ‘(‘ TEXT\* ‘)’; <br />
+**function_end:** ‘END FUNCTION’; <br />
 
-**loop:** loop_start statement+ loop_end;
-**loop_start:** ‘DEFINE LOOP’ TEXT TEXT ‘FROM’ NUM ‘TO’ NUM ‘INCREMENT BY’ NUM;
-**loop_end:** ‘END LOOP’ TEXT;
+**loop:** loop_start statement+ loop_end; <br />
+**loop_start:** ‘DEFINE LOOP’ TEXT TEXT ‘FROM’ NUM ‘TO’ NUM ‘INCREMENT BY’ NUM; <br />
+**loop_end:** ‘END LOOP’ TEXT; <br />
 
-**statement:** feature | place_feature | function_call | loop | variable | conditional | math;
+**statement:** feature | place_feature | function_call | loop | variable | conditional | math; <br />
 
-**create_map:** ‘CREATE MAP’ TEXT ‘of SIZE’ NUM 'x' NUM ‘and COLOR’ color;
-**feature:** ‘DEFINE FEATURE’ TEXT ‘with ICON’ TEXT ‘and SIZE’ NUM;
-**place_feature:** ‘PLACE FEATURE’ TEXT ‘with NAME’ TEXT ‘at LOCATION’ coordinates ‘on’ area;
-**place_region:** ‘PLACE REGION’ region ‘with NAME’ TEXT ‘and SHAPE’ shape;
-**function_call:** ‘CALL FUNCTION’ TEXT ‘(‘ TEXT\* ‘)’;
-**variable:** TEXT '=' (TEXT | math);
-**conditional:** 'if' TEXT comparison_operator TEXT;
-**comparison_operator:** "==" | ">" | "<" | "<=" | ">=" | "!=";
-**math:** (NUM | TEXT) math_operator (NUM | TEXT);
-**math_operator:** "+" | "-" | "/" | "\*";
+**create_map:** ‘CREATE MAP’ TEXT ‘of SIZE’ NUM 'x' NUM ‘and COLOR’ color; <br />
+**feature:** ‘DEFINE FEATURE’ TEXT ‘with ICON’ TEXT ‘and SIZE’ NUM; <br />
+**place_feature:** ‘PLACE FEATURE’ TEXT ‘with NAME’ TEXT ‘at LOCATION’ coordinates ‘on’ area; <br />
+**place_region:** ‘PLACE REGION’ region ‘with NAME’ TEXT ‘and SHAPE’ shape; <br />
+**function_call:** ‘CALL FUNCTION’ TEXT ‘(‘ TEXT\* ‘)’; <br />
+**variable:** TEXT '=' (TEXT | math); <br />
+**conditional:** 'if' TEXT comparison_operator TEXT; <br />
+**comparison_operator:** "==" | ">" | "<" | "<=" | ">=" | "!="; <br />
+**math:** (NUM | TEXT) math_operator (NUM | TEXT); <br />
+**math_operator:** "+" | "-" | "/" | "\*"; <br />
 
-**region:** ‘grass’ | ‘desert’ | ‘forest’ | ‘water’ | ‘snow’ | ‘ocean’;
-**shape:** circle | rectangle | triangle | ‘UNDEFINED SPACE’;
-**circle:** ‘CIRCLE of RADIUS’ NUM ‘at POSITION’ coordinates;
-**rectangle:** ‘RECTANGLE from POSITION’ coordinates ‘to POSITION’ coordinates;
-**triangle:** ‘TRIANGLE facing DIRECTION’ direction ‘with LENGTH’ NUM ‘at POSITION’ coordinates;
-**direction:** ‘north-west’ | ‘north-east’ | ‘south-west’ | ‘south-east’;
-**color:** ‘#’ RRGGBB;
-**area:** ‘map’ | 'region' TEXT;  
-**coordinates:** ‘[‘ NUM ‘,’ NUM ‘]’;
-**TEXT:** [a-zA-Z0-9]+;
-**NUM:** [0-9]+;
-**RRGGBB:** [0-9A-F]{6};
+**region:** ‘grass’ | ‘desert’ | ‘forest’ | ‘water’ | ‘snow’ | ‘ocean’; <br />
+**shape:** circle | rectangle | triangle | ‘UNDEFINED SPACE’; <br />
+**circle:** ‘CIRCLE of RADIUS’ NUM ‘at POSITION’ coordinates; <br />
+**rectangle:** ‘RECTANGLE from POSITION’ coordinates ‘to POSITION’ coordinates; <br />
+**triangle:** ‘TRIANGLE facing DIRECTION’ direction ‘with LENGTH’ NUM ‘at POSITION’ coordinates; <br />
+**direction:** ‘north-west’ | ‘north-east’ | ‘south-west’ | ‘south-east’; <br />
+**color:** ‘#’ RRGGBB; <br />
+**area:** ‘map’ | 'region' TEXT; <br />
+**coordinates:** ‘[‘ NUM ‘,’ NUM ‘]’; <br />
+**TEXT:** [a-zA-Z0-9]+; <br />
+**NUM:** [0-9]+; <br />
+**RRGGBB:** [0-9A-F]{6}; <br />
 
 ## Example
 
 ### Flow of Input
 
-#start map
-Create Map
-#end map
+#start map <br />
+Create Map <br />
+#end map <br />
 
 #start region
 Place Regions
