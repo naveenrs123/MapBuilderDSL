@@ -105,7 +105,7 @@ PLACE REGION grass with NAME Death Valley and SHAPE UNDEFINED SPACE
 #start function definitions
 DEFINE FUNCTION makeMountains (x_start x_stop y_start y_stop)
 
-    DEFINE FEATURE mountain ‘with ICON’ mountain ‘and SIZE’ 1
+    DEFINE FEATURE mountain with ICON mountain and SIZE 1
 
     counter = y_start
 
@@ -115,7 +115,7 @@ DEFINE FUNCTION makeMountains (x_start x_stop y_start y_stop)
 
             if Y == counter
 
-                PLACE FEATURE mountain ‘with NAME’ Rockies ‘at LOCATION’ [X,Y] ‘on’ map;
+                PLACE FEATURE mountain with NAME Rockies at LOCATION [X,Y] on map;
 
         END LOOP loop2
 
