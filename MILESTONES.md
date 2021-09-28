@@ -16,11 +16,12 @@ We have drafted a roadmap, the grammar, as well as created a mock of the input a
 | ------------------ | ------------ | ----------------------------- |
 | All                | Fri Sept 24  | Create grammar rules          |
 | Adam               | Mon Sept 27  | Design user study 1           |
-| Naveen, Zoe, Kevin | Mon Sept 27  | Get uesr study 1 participants |
-| All                | Fri Oct 1    | Complete user study 1         |
-| Naveen             | Mon Oct 4    | Implement tokenizer           |
+| Naveen, Zoe, Kevin | Mon Sept 27  | Get user study 1 participants |
+| All                | Thurs Sept 30| Complete user study 1         |
+| All                | Fri Oct 1    | Revist grammar & submit milestone 3 |
+| Adam               | Mon Oct 4    | Implement tokenizer           |
 | Zoe                | Mon Oct 4    | Implement parser              |
-| Adam               | Mon Oct 4    | Implement AST creation        |
+| Naveen             | Mon Oct 4    | Implement AST creation        |
 | Kevin              | Mon Oct 4    | Implement validator           |
 | Naveen             | Fri Oct 8    | Plan user study 2             |
 | Kai + All          | Tues Oct 12  | Render map                    |
