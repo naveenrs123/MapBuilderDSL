@@ -4,6 +4,97 @@ for the milestones that's fine too. Make sure that your TA has had a chance to
 sign off on your milestones each week (before the deadline); typically you
 should discuss your material with them before finalizing it here._
 
+
+# Milestone 3
+
+## User Study 1 Notes
+
+We conducted our first user study on September 30th on two people. See this [document](https://docs.google.com/document/d/1IEgUtsPOKzx8dMeXvcACd8LlX0J6yRDyWC7sULtSYfI/edit?usp=sharing) we wrote to conduct the user study.
+
+We had our two participants attempt to write code that would represent maps we showed them. We utilized the grammar listed in milestone 2. 
+
+See this [document](https://docs.google.com/document/d/1y-FbWe8Lyf2YGHl0yXMLw0CpWOJO1tjWbeb48FEHzJM/edit?usp=sharing) for all the detailed feedback we got:
+The main feedback/comments we got were:
+- wrap names/labels in quotation marks, so it is easier to identify them
+- Defining rectangles using two coordinates was confusing, better to define a point and dimensions (length, height)
+- Users were interested in placing regions/referring to regions inside of functions
+- The users found the ordering/structure of our code blocks to be a bit counter-intuitive. They suggested defining features and functions in the same block, and placing features and calling functions in another block
+- The users were assuming that if you create two overlapping regions, the one written later/further down the file would overlay the first one
+- When creating a region or feature with no name, users found it more intuitive to completely remove the NAME/LABEL parameter from the statement. However, having this optional may over-complicate our language
+
+
+These are the main changes we will be making to our grammar/language after this user study:
+- Indicate Labels/Names as being wrapped in quotation marks
+- Restructure the main blocks/layout of our code so that functions and features are defined in the same block
+- When placing a region or feature, add a boolean flag to indicate whether the label/display name should be visible, so as to avoid optional labels
+- When defining the shape of a region as a rectangle, define the upper coordinate and the length and height
+- Remove circles, undefined space, and triangles from our available shapes for regions. Only use rectangles. With a big enough map and multiple regions, we should be able to represent a variety of landscapes using only rectangles.
+
+Below is the updated grammar, incorporating user feedback from our user study:
+
+## Reworked Grammar 
+
+// TOP LEVEL <br />
+**program**: map def? place_and_call?; <br />
+**map**: ‘#start map’ create_map ‘#end map’; <br />
+**def**: ‘#start definitions’ ( function | define_feature )+ ‘#end definitions’; <br />
+**place_and_call**: ‘#start place and call’ place_statement+ ‘#end place and call’; <br />
+
+// FUNCTIONS <br />
+**function**: function_start function_statement+ function_end ; <br />
+**function_start**: ‘DEFINE FUNCTION’ TEXT ‘(‘ TEXT (‘,’ TEXT)* ‘):’ ; <br />
+**FUNCTION_END**: ‘END FUNCTION;’ ; <br />
+
+// LOOPS <br />
+**loop**: loop_start loop_statement+ loop_end; <br />
+**loop_start**: ‘START LOOP’ TEXT ',' TEXT ‘FROM’ NUM ‘TO’ NUM ( ‘INCREMENT BY’ | 'DECREMENT BY' ) NUM ‘:’; <br />
+**loop_end**: ‘END LOOP’ TEXT ';' ; <br />
+
+// IF CONDITION <br />
+**conditional**: if_start function_statement+ (else_start function_statement+ else_end)? if_end; <br />
+**if_start**: 'IF' comparison ‘:’; <br />
+**else_start**: ‘ELSE’ ‘:’; <br />
+**else_end**: ‘END ELSE ;’; <br />
+**if_end**: ‘END IF;’; <br />
+
+// FUNCTION STATEMENTS <br />
+**function_statement**: (loop | conditional | place_feature | place_region | assignment) ‘;’; <br />
+**loop_statement**: (conditional | place_feature | place_region | assignment) ‘;’; <br />
+
+// PLACE STATEMENT <br />
+**place_statement**: (define_feature | place_feature | place_region | function_call) ‘;’; <br />
+
+// MAIN COMMANDS <br />
+**create_map**: ‘CREATE MAP’ quoted_text ‘WITH DIMENSIONS’ xytuple ‘WITH COLOR’ COLOR ‘;’; <br />
+**place_region**: ‘PLACE REGION’ REGION ‘WITH NAME’ quoted_text ‘WITH LOCATION’ xytuple ‘WITH DIMENSIONS’ xytuple (‘DISPLAY NAME’ BOOLEAN)?; <br />
+**define_feature**: ‘DEFINE FEATURE’ TEXT ‘WITH ICON’ quoted_text ‘WITH SIZE’ NUM; <br />
+**place_feature**: ‘PLACE FEATURE’ TEXT ‘WITH NAME’ quoted_text ‘WITH LOCATION’ xytuple ‘ON’ area (‘DISPLAY NAME’ BOOLEAN)?; <br />
+**function_call**: ‘CALL FUNCTION’ TEXT ‘(‘ expression* ‘)’ ; <br />
+**assignment**: TEXT '=' expression; <br />
+
+**expression**: comparison | math | quoted_text | TEXT | BOOLEAN; <br />
+
+**comparison**: math_compare | quote_compare; <br />
+**math_compare**: math comparison_op math; <br />
+**quote_compare**: quoted_text QUOTE_COMPARISON_OP quoted_text; <br />
+**comparison_op**: '>' | '<' | '<=' | '>=' | QUOTE_COMPARISON_OP; <br />
+
+**math**: TEXT(math_op TEXT)?; <br />
+**math_op**: '+' | '-' | '/' | '\*'; <br />
+**area**: 'map' | 'region' quoted_text; <br />
+**xytuple**: ‘[‘ NUM ‘,’ NUM ‘]’; <br />
+**quoted_text**: ‘“’ (TEXT | WS)* ‘”’; <br />
+
+// TERMINALS <br />
+**QUOTE_COMPARISON_OP**: '==' | '!='; <br />
+**REGION**: ‘grass’ | ‘desert’ | ‘forest’ | ‘water’ | ‘snow’ | ‘ocean’; <br />
+**COLOR**: ‘#’ [0-9A-F]{6}; <br />
+**TEXT**: [a-zA-Z0-9_]+; <br />
+**WS**: [/r/n/t ]+; <br />
+**NUM**: [0-9]+; <br />
+**BOOLEAN**: ‘TRUE’ | ‘FALSE’; <br />
+
+
 # Milestone 2
 
 ## Summary of Progress
