@@ -9,12 +9,12 @@ DEFINE FUNCTION makeWaves (x_start, x_stop):
 	    $IF #math compare $math X $end_math > $math Y $end_math:
 		    PLACE FEATURE wave WITH NAME {Blank} WITH LOCATION [X, 2] ON map
 		$ELSE:
-		    X = #math compare $math 5 $end_math != $math 5 $end_math;
-		    Y = #text compare {yes} == {yes};
-		    Z = $math 5 + 5 $end_math;
-		    var = {my text};
-		    var2 = text_2;
-		    var3 = %FALSE;
+		    %assign X = #math compare $math 5 $end_math != $math 5 $end_math;
+		    %assign Y = #text compare {yes} == {yes};
+		    %assign Z = $math 5 + 5 $end_math;
+		    %assign var = {my text};
+		    %assign var2 = text_2;
+		    %assign var3 = %FALSE;
 		$END ELSE;
         $END IF;
 	END LOOP loop1;
