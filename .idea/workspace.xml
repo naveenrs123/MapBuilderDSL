@@ -2,7 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e60f357b-a3f8-41fb-920d-c21ac5d815f6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/ProjectFiles/src/parser/Lexer.g4" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectFiles/src/parser/Lexer.g4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Project1Group8.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Project1Group8.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/.idea/libraries/antlr_4_9_2_complete.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/ProjectFiles.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/gen/parser/MapLexer.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/gen/parser/MapLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/gen/parser/MapLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/lib/antlr-4.9.2-complete.jar" beforeDir="false" afterPath="$PROJECT_DIR$/lib/antlr-4.9.2-complete.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/out/production/ProjectFiles/libs/Tokens.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/out/production/ProjectFiles/parser/MapLexer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/out/production/ProjectFiles/parser/MapLexer.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/MapLexer.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/out/production/ProjectFiles/parser/MapLexer.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/out/production/ProjectFiles/parser/MapLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/out/production/ProjectFiles/ui/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/src/libs/Tokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/libs/Tokens.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/src/parser/MapLexer.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/src/ui/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MainProgram.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/testExpressionAndConditional.tdot" beforeDir="false" afterPath="$PROJECT_DIR$/testExpressionAndConditional.tdot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/userStudyExample1.tdot" beforeDir="false" afterPath="$PROJECT_DIR$/userStudyExample1.tdot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectFiles/userStudyExample2.tdot" beforeDir="false" afterPath="$PROJECT_DIR$/userStudyExample2.tdot" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,13 +56,32 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/antlr-4.9.2-complete.jar" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\zoega\Documents\CPSC410\Project1Group8\lib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\zoega\Documents\CPSC410\Project1Group8" />
+      <recent name="C:\Users\zoega\Documents\CPSC410\Project1Group8\ProjectFiles" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ui.MainProgram" />
+      <module name="Project1Group8" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -55,6 +99,9 @@
       <workItem from="1633218835308" duration="10948000" />
       <workItem from="1633237554353" duration="1133000" />
       <workItem from="1633238747133" duration="75000" />
+      <workItem from="1633577524201" duration="448000" />
+      <workItem from="1633577998417" duration="192000" />
+      <workItem from="1633578227602" duration="262000" />
     </task>
     <servers />
   </component>
