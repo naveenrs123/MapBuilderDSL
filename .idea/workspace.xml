@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="e60f357b-a3f8-41fb-920d-c21ac5d815f6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/ProjectFiles/src/parser/Lexer.g4" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectFiles/src/parser/Lexer.g4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ProjectFiles/src/parser/MapParser.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

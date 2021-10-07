@@ -1,5 +1,4 @@
 // Generated from /Users/kaicycle/bike-boy-does-school/CS410/Project1Group8/ProjectFiles/src/parser/MapLexer.g4 by ANTLR 4.9.1
-package parser;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

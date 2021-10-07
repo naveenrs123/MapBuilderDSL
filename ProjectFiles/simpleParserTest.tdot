@@ -1,0 +1,11 @@
+#start map
+CREATE MAP {The Hot Desert} WITH DIMENSIONS [5,5] WITH COLOR #00FF80;
+#end map
+
+#start definitions
+SomeDefinitionText
+#end definitions
+
+#start place and call
+SomePlaceText
+#end place and call
