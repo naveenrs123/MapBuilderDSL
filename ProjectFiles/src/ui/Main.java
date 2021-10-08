@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException, MismatchedTokenException {
-        MapLexer lexer = new MapLexer(CharStreams.fromFileName("testExpressionAndConditional.tdot"));
+        MapLexer lexer = new MapLexer(CharStreams.fromFileName("userStudyExample2.tdot"));
         for (Token token : lexer.getAllTokens()) {
             System.out.println(token);
         }
