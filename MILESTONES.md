@@ -4,6 +4,34 @@ for the milestones that's fine too. Make sure that your TA has had a chance to
 sign off on your milestones each week (before the deadline); typically you
 should discuss your material with them before finalizing it here._
 
+# Milestone 4
+
+## Status of Implementation / Planned Timeline
+
+Here is a chart outlining the general status of our language's implementation and our timeline for the remaining days.
+| Task                	| Status      	| deadline (subject to change) 	|
+|---------------------	|-------------	|------------------------------	|
+| Lexer               	| Complete    	|        n/a                      	|
+| Parser              	| In progress 	| Friday the 8th               	|
+| AST visitor template 	| In Progress 	| Friday the 8th               	|
+| Complete AST        	| Todo        	| Monday the 12th             	|
+| Validator           	| Todo        	| Wednesday the 14th            	|
+| Renderer            	| In progress 	| Wednesday the 14th            	|
+
+Our parser along with a a visitor template to traverser to parse tree (which will be used to test the parser and to create the AST) are currently being worked on and should be completed very soon. Over the long weekend we will work to implement everything needed to generate our AST. We will then start working on the validator to have it ready for the final user study. We have one team member tacking the lead for each of these sections and they are getting help from other team members as it needed. In parallel to the completion of the parser/AST/validator we have one team member working on our map renderer (evaluator). They are making good progress and it should be simple to add their work into the AST one it is complete.
+
+We plan to have the language complete by wednesday. This will give us all a chance to explore and test the language before our final user study on Thursday.
+
+After our user study we will use the weekends to make our Video as well as any final changes to the language.
+
+## Plan for user study 2
+We are planning to have our second user on Thursday the 14th. We are currently in touch with another group from this course who have agreed to participate in our user study.
+
+We are going to work on the user study problems over the weekend and plan to have them complete by monday. We will do a final review of our questions on wednesday and thursday once the language is complete. 
+
+We will use the weekend to make any last changes to our language based on the results of the user study.
+
+
 
 # Milestone 3
 
