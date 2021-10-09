@@ -7,6 +7,6 @@ DEFINE FEATURE mountain WITH ICON {mountain} WITH SIZE 1
 #end definitions
 
 #start place and call
-PLACE REGION desert WITH NAME {Sahara} WITH LOCATION [1,1] WITH DIMENSIONS [1,2] DISPLAY NAME %TRUE
-PLACE FEATURE mountain WITH NAME {Rocky} WITH LOCATION [3,3] ON map
+PLACE REGION desert WITH NAME {Sahara} WITH LOCATION [1,1] WITH DIMENSIONS [1,2] DISPLAY NAME %TRUE;
+PLACE FEATURE mountain WITH NAME {Rocky} WITH LOCATION [3,3] ON map;
 #end place and call
