@@ -33,7 +33,6 @@ math_op_if: MATH_FROM_IF_OPERATORS;
 
 // FUNCTION STATEMENTS
 function_statement: (loop | conditional | place_feature_from_func | place_region | assignment) ;
-//loop_statement: (conditional | place_feature | place_region | assignment | loop) FUNCTION_STATEMENT_END_OF_LINE;
 
 // PLACE STATEMENT
 place_statement: (define_feature | place_feature | place_region | function_call) PLACE_STATEMENT_END;
