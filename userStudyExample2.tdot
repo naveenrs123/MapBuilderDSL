@@ -12,5 +12,5 @@ END FUNCTION;
 #end definitions
 
 #start place and call
-CALL FUNCTION makeWaves(0, 4)
+CALL FUNCTION makeWaves(0, 4);
 #end place and call
