@@ -27,7 +27,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         String title = ctx.quoted_text().getText();
         XYTuple xyTuple = visitXytuple(ctx.xytuple());
         String colorText = ctx.color().COLOR_CODE().getSymbol().getText();
-        Color color = new Color(Integer.parseInt(colorText));
+        Color color = new Color(Integer.parseInt(colorText, 16));
         return new Map(xyTuple.getY(), xyTuple.getX(), color, title);
     }
 
@@ -51,7 +51,27 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public PlaceAndCall visitPlace_and_call(MapParser.Place_and_callContext ctx) {
-        return new PlaceAndCall();
+        ArrayList<Statement> placeStatements = new ArrayList<>();
+
+        for (MapParser.Place_statementContext placeStatementCtx
+                : ctx.place_statement()) {
+            placeStatements.add(visitPlace_statement(placeStatementCtx));
+        }
+
+        return new PlaceAndCall(placeStatements);
+    }
+
+    @Override
+    public Statement visitPlace_statement(MapParser.Place_statementContext ctx) {
+        DefineFeature defineFeature = visitDefine_feature(ctx.define_feature());
+        PlaceFeature placeFeature = visitPlace_feature(ctx.place_feature());
+        PlaceRegion placeRegion = visitPlace_region(ctx.place_region());
+        FunctionCall functionCall = visitFunction_call(ctx.function_call());
+
+        if (defineFeature != null) return defineFeature;
+        if (placeFeature != null) return placeFeature;
+        if (placeRegion != null) return placeRegion;
+        return functionCall;
     }
 
     @Override
@@ -78,16 +98,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         }
 
         return new Function(functionName, paramNames, functionStatements);
-    }
-
-    @Override
-    public Node visitFunction_start(MapParser.Function_startContext ctx) {
-        return super.visitFunction_start(ctx);
-    }
-
-    @Override
-    public Node visitFunction_end(MapParser.Function_endContext ctx) {
-        return super.visitFunction_end(ctx);
     }
 
     @Override
@@ -157,21 +167,23 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Statement visitFunction_statement(MapParser.Function_statementContext ctx) {
-        return new Statement();
+        System.out.println(ctx.getChildCount());
+        return null;
     }
 
     @Override
-    public Node visitPlace_statement(MapParser.Place_statementContext ctx) {
-        return super.visitPlace_statement(ctx);
-    }
-
-    @Override
-    public Node visitPlace_region(MapParser.Place_regionContext ctx) {
-        return super.visitPlace_region(ctx);
+    public PlaceRegion visitPlace_region(MapParser.Place_regionContext ctx) {
+        if (ctx == null || ctx.isEmpty()) {
+            return null;
+        }
+        return new PlaceRegion();
     }
 
     @Override
     public DefineFeature visitDefine_feature(MapParser.Define_featureContext ctx) {
+        if (ctx == null || ctx.isEmpty()) {
+            return null;
+        }
         String featureType = ctx.TEXT().getText();
         String icon = ctx.quoted_text().getText();
         int size = Integer.parseInt(ctx.NUM().getText());
@@ -179,13 +191,19 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitPlace_feature(MapParser.Place_featureContext ctx) {
-        return super.visitPlace_feature(ctx);
+    public PlaceFeature visitPlace_feature(MapParser.Place_featureContext ctx) {
+        if (ctx == null || ctx.isEmpty()) {
+            return null;
+        }
+        return new PlaceFeature();
     }
 
     @Override
-    public Node visitFunction_call(MapParser.Function_callContext ctx) {
-        return super.visitFunction_call(ctx);
+    public FunctionCall visitFunction_call(MapParser.Function_callContext ctx) {
+        if (ctx == null || ctx.isEmpty()) {
+            return null;
+        }
+        return new FunctionCall();
     }
 
     @Override
@@ -314,6 +332,16 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     @Override
     public Node visitColor(MapParser.ColorContext ctx) {
         return null;
+    }
+
+    @Override
+    public Node visitFunction_start(MapParser.Function_startContext ctx) {
+        return super.visitFunction_start(ctx);
+    }
+
+    @Override
+    public Node visitFunction_end(MapParser.Function_endContext ctx) {
+        return super.visitFunction_end(ctx);
     }
     //endregion
 }

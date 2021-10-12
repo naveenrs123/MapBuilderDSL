@@ -1,6 +1,6 @@
 package ast;
 
-public class DefineFeature extends Node {
+public class DefineFeature extends Statement {
 
     private final String featureType;
     private final String icon;
