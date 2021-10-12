@@ -1,5 +1,7 @@
 package ast;
 
+import java.util.Objects;
+
 public class PlaceFeature extends Statement {
 
     private final String featureType;
@@ -40,5 +42,19 @@ public class PlaceFeature extends Statement {
     @Override
     public <T> T accept(MapVisitor<T> v) {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlaceFeature that = (PlaceFeature) o;
+        return onMap == that.onMap && featureType.equals(that.featureType) && featureName.equals(that.featureName)
+                && location.equals(that.location) && Objects.equals(regionName, that.regionName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(featureType, featureName, location, onMap, regionName);
     }
 }

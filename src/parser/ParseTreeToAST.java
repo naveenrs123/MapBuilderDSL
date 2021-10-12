@@ -1,9 +1,12 @@
 package parser;
 
+import Helpers.ExecutionOrderContext;
+import Helpers.StatementListEnum;
 import ast.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -30,13 +33,13 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         XYTuple mapDimensions = visitXytuple(ctx.xytuple());
         String colorText = ctx.color().COLOR_CODE().getSymbol().getText();
         Color color = new Color(Integer.parseInt(colorText, 16));
-        return new Map(mapDimensions.getY(), mapDimensions.getX(), color, title);
+        return new Map(mapDimensions, color, title);
     }
 
     @Override
     public Def visitDef(DefContext ctx) {
-        ArrayList<Function> functions = new ArrayList<>();
-        ArrayList<DefineFeature> defineFeatures = new ArrayList<>();
+        HashSet<Function> functions = new HashSet<>();
+        HashSet<DefineFeature> defineFeatures = new HashSet<>();
 
         for (Define_featureContext defineFeatureCtx
                 : ctx.define_feature()) {
@@ -53,6 +56,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public PlaceAndCall visitPlace_and_call(Place_and_callContext ctx) {
+        ArrayList<ExecutionOrderContext> executionOrderList = new ArrayList<>();
         ArrayList<PlaceRegion> placeRegionList = new ArrayList<>();
         ArrayList<PlaceFeature> placeFeatureList = new ArrayList<>();
         ArrayList<FunctionCall> functionCallList = new ArrayList<>();
@@ -63,48 +67,91 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
             PlaceFeature placeFeature = visitPlace_feature(placeStatementCtx.place_feature());
             FunctionCall functionCall = visitFunction_call(placeStatementCtx.function_call());
 
-            if (placeRegion != null) placeRegionList.add(placeRegion);
-            if (placeFeature != null) placeFeatureList.add(placeFeature);
-            if (functionCall != null) functionCallList.add(functionCall);
+            if (placeRegion != null) {
+                placeRegionList.add(placeRegion);
+                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.PLACE_REGION, placeRegionList.size() - 1));
+            }
+            if (placeFeature != null) {
+                placeFeatureList.add(placeFeature);
+                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.PLACE_FEATURE, placeFeatureList.size() - 1));
+            }
+            if (functionCall != null) {
+                functionCallList.add(functionCall);
+                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.FUNCTION_CALL, functionCallList.size() - 1));
+            }
         }
 
-        return new PlaceAndCall(placeRegionList, placeFeatureList, functionCallList);
+        return new PlaceAndCall(placeRegionList, placeFeatureList, functionCallList, executionOrderList);
     }
 
     @Override
     public Function visitFunction(FunctionContext ctx) {
+        ArrayList<ExecutionOrderContext> executionOrderList = new ArrayList<>();
         ArrayList<String> paramNames = new ArrayList<>();
-        ArrayList<Statement> functionStatements = new ArrayList<>();
         List<TerminalNode> textList = ctx.function_start().TEXT();
         String functionName = textList.get(0).getText();
         handleParamList(paramNames, textList);
 
+        ArrayList<Loop> loops = new ArrayList<>();
+        ArrayList<Conditional> conditionals = new ArrayList<>();
+        ArrayList<PlaceFeature> placeFeatures = new ArrayList<>();
+        ArrayList<PlaceRegion> placeRegions = new ArrayList<>();
+        ArrayList<Assignment> assignments = new ArrayList<>();
+
         for (Function_statementContext functionStatementCtx
                 : ctx.function_statement()) {
-            functionStatements.add(visitFunction_statement(functionStatementCtx));
+            Loop loop = visitLoop(functionStatementCtx.loop());
+            Conditional conditional = visitConditional(functionStatementCtx.conditional());
+            PlaceFeature placeFeature = visitPlace_feature_from_func(functionStatementCtx.place_feature_from_func());
+            PlaceRegion placeRegion = visitPlace_region_from_func(functionStatementCtx.place_region_from_func());
+            Assignment assignment = visitAssignment(functionStatementCtx.assignment());
+
+            if (loop != null) {
+                loops.add(loop);
+                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.LOOP, loops.size() - 1));
+            }
+            if (conditional != null) {
+                conditionals.add(conditional);
+                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.CONDITIONAL, conditionals.size() - 1));
+            }
+            if (placeFeature != null) {
+                placeFeatures.add(placeFeature);
+                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.PLACE_FEATURE, placeFeatures.size() - 1));
+            }
+            if (placeRegion != null) {
+                placeRegions.add(placeRegion);
+                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.PLACE_REGION, placeRegions.size() - 1));
+            }
+            if (assignment != null) {
+                assignments.add(assignment);
+                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.ASSIGNMENT, assignments.size() - 1));
+            }
+;        }
+
+        return new Function(functionName, paramNames, executionOrderList);
+    }
+
+    @Override
+    public Loop visitLoop(LoopContext ctx) {
+        if (ctx == null || ctx.isEmpty()) {
+            return null;
         }
+        Loop_startContext loopStartCtx = ctx.loop_start();
 
-        return new Function(functionName, paramNames, functionStatements);
+        String name = loopStartCtx.FUNCTION_STATEMENT_TEXT_TEXT(0).getText();
+        String variable = loopStartCtx.FUNCTION_STATEMENT_TEXT_TEXT(1).getText();
+        String start = loopStartCtx.FUNCTION_STATEMENT_TEXT_TEXT(2).getText();
+        String stop = loopStartCtx.FUNCTION_STATEMENT_TEXT_TEXT(3).getText();
+        int counter = Integer.parseInt(loopStartCtx.FUNCTION_STATEMENT_NUM().getText());
+        if (loopStartCtx.LOOP_DECREMENT() != null) {
+            counter = -counter;
+        }
+        return new Loop(name, variable, start, stop, counter);
     }
 
     @Override
-    public Node visitLoop(LoopContext ctx) {
-        return super.visitLoop(ctx);
-    }
-
-    @Override
-    public Node visitLoop_start(Loop_startContext ctx) {
-        return super.visitLoop_start(ctx);
-    }
-
-    @Override
-    public Node visitLoop_end(Loop_endContext ctx) {
-        return super.visitLoop_end(ctx);
-    }
-
-    @Override
-    public Node visitConditional(ConditionalContext ctx) {
-        return super.visitConditional(ctx);
+    public Conditional visitConditional(ConditionalContext ctx) {
+        return new Conditional();
     }
 
     @Override
@@ -231,18 +278,51 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitAssignment(AssignmentContext ctx) {
-        return super.visitAssignment(ctx);
+    public Assignment visitAssignment(AssignmentContext ctx) {
+        return new Assignment();
     }
 
     @Override
-    public Node visitPlace_feature_from_func(Place_feature_from_funcContext ctx) {
-        return super.visitPlace_feature_from_func(ctx);
+    public PlaceFeature visitPlace_feature_from_func(Place_feature_from_funcContext ctx) {
+        if (ctx == null || ctx.isEmpty()) {
+            return null;
+        }
+        String featureType = ctx.FUNCTION_STATEMENT_TEXT_TEXT().getText();
+        String featureName = ctx.quoted_text_func().FROM_FUNC_QUOTED_TEXT().getText();
+        XYTuple location = visitXytuple_func(ctx.xytuple_func());
+        boolean onMap = ctx.area_func().quoted_text() == null || ctx.area_func().quoted_text().isEmpty();
+        String regionName = null;
+        if (!onMap) {
+            regionName = ctx.area_func().quoted_text().QUOTED_TEXT().getText();
+        }
+
+        return new PlaceFeature(featureType, featureName, location, onMap, regionName);
+    }
+
+    @Override
+    public PlaceRegion visitPlace_region_from_func(Place_region_from_funcContext ctx) {
+        if (ctx == null || ctx.isEmpty()) {
+            return null;
+        }
+        String regionType = ctx.REGION_FROM_FUNC().getText();
+        String regionName = ctx.quoted_text_func().FROM_FUNC_QUOTED_TEXT().getText();
+        XYTuple location = visitXytuple_func(ctx.xytuple_func(0));
+        XYTuple dimensions = visitXytuple_func(ctx.xytuple_func(1));
+        boolean displayLabels = true;
+        if (ctx.boolean_antlr_func() != null && !ctx.isEmpty()) {
+            if (ctx.boolean_antlr_func().BOOLEAN_FROM_FUNC_FALSE() != null) {
+                displayLabels = false;
+            }
+        }
+
+        return new PlaceRegion(regionType, regionName, location, dimensions, displayLabels);
     }
 
     @Override
     public XYTuple visitXytuple_func(Xytuple_funcContext ctx) {
-        return new XYTuple(0,0);
+        int x = Integer.parseInt(ctx.FROM_FUNC_TUPLE_TEXT(0).getText());
+        int y = Integer.parseInt(ctx.FROM_FUNC_TUPLE_TEXT(1).getText());
+        return new XYTuple(x, y);
     }
 
     @Override
@@ -349,6 +429,16 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
+    public Node visitBoolean_antlr_reg(Boolean_antlr_regContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitBoolean_antlr_func(Boolean_antlr_funcContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
     public Node visitFunction_start(Function_startContext ctx) {
         throw new UnsupportedOperationException("This method is not used.");
     }
@@ -360,6 +450,16 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Statement visitPlace_statement(Place_statementContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitLoop_start(Loop_startContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitLoop_end(Loop_endContext ctx) {
         throw new UnsupportedOperationException("This method is not used.");
     }
     //endregion

@@ -32,7 +32,7 @@ math_if: MATH_FROM_IF_START MATH_FROM_IF_TEXT (math_op_if MATH_FROM_IF_TEXT)? MA
 math_op_if: MATH_FROM_IF_OPERATORS;
 
 // FUNCTION STATEMENTS
-function_statement: (loop | conditional | place_feature_from_func | place_region_from_func | assignment) ;
+function_statement: (loop | conditional | place_feature_from_func | place_region_from_func | assignment);
 
 // PLACE STATEMENT
 place_statement: (place_feature | place_region | function_call) PLACE_STATEMENT_END;
@@ -47,7 +47,7 @@ assignment: ASSIGNMENT_START FUNCTION_STATEMENT_TEXT_TEXT ASSIGNMENT_EQUALS expr
 
 // FUNCTION SPECIFIC THINGS
 place_feature_from_func: PLACE_FEATURE_START_FROM_FUNC FUNCTION_STATEMENT_TEXT_TEXT FEATURE_OR_REGION_NAME_FROM_FUNC quoted_text_func FEATURE_OR_REGION_LOCATION_FROM_FUNC xytuple_func PLACE_FEATURE_ON_FROM_FUNC area_func (FEATURE_OR_REGION_DISPLAY_FROM_FUNC boolean_antlr_func)?;
-place_region_from_func: PLACE_REGION_START_FROM_FUNC REGION_FROM_FUNC FEATURE_OR_REGION_NAME_FROM_FUNC quoted_text_func FEATURE_OR_REGION_LOCATION_FROM_FUNC xytuple_func (FEATURE_OR_REGION_DISPLAY_FROM_FUNC boolean_antlr_func)?;
+place_region_from_func: PLACE_REGION_START_FROM_FUNC REGION_FROM_FUNC FEATURE_OR_REGION_NAME_FROM_FUNC quoted_text_func FEATURE_OR_REGION_LOCATION_FROM_FUNC xytuple_func PLACE_REGION_DIMENSIONS xytuple_func (FEATURE_OR_REGION_DISPLAY_FROM_FUNC boolean_antlr_func)?;
 xytuple_func: FROM_FUNC_OPENING_BRACKET FROM_FUNC_TUPLE_TEXT FROM_FUNC_TUPLE_SEP FROM_FUNC_TUPLE_TEXT FROM_FUNC_CLOSING_BRACKET;
 quoted_text_func: FROM_FUNC_OPENING_QUOTE FROM_FUNC_QUOTED_TEXT FROM_FUNC_CLOSING_QUOTE;
 area_func: AREA_FROM_FUNC_MAP | (AREA_FRM_FUNC_REGION quoted_text); //REVIEW: COMPARE TO REVISED GRAMMAR

@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FunctionCall extends Statement {
 
@@ -23,5 +24,18 @@ public class FunctionCall extends Statement {
     @Override
     public <T> T accept(MapVisitor<T> v) {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FunctionCall that = (FunctionCall) o;
+        return functionName.equals(that.functionName) && paramValues.equals(that.paramValues);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(functionName, paramValues);
     }
 }

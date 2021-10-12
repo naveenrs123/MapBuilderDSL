@@ -1,5 +1,7 @@
 package ast;
 
+import java.util.Objects;
+
 public class PlaceRegion extends Statement {
 
     private final String regionType;
@@ -40,5 +42,18 @@ public class PlaceRegion extends Statement {
     @Override
     public <T> T accept(MapVisitor<T> v) {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlaceRegion that = (PlaceRegion) o;
+        return regionType.equals(that.regionType) && regionName.equals(that.regionName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(regionType, regionName);
     }
 }
