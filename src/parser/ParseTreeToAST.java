@@ -79,18 +79,9 @@ public class ParseTreeToAST extends AbstractParseTreeVisitor<Node> implements Ma
         return null;
     }
 
-    @Override
-    public Node visitComparison_if(MapParser.Comparison_ifContext ctx) {
-        return null;
-    }
 
     @Override
-    public Node visitMath_compare_if(MapParser.Math_compare_ifContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Node visitQuote_compare_if(MapParser.Quote_compare_ifContext ctx) {
+    public Node visitQuote_compare_start(MapParser.Quote_compare_startContext ctx) {
         return null;
     }
 
@@ -99,8 +90,9 @@ public class ParseTreeToAST extends AbstractParseTreeVisitor<Node> implements Ma
         return null;
     }
 
+
     @Override
-    public Node visitMath_op_if(MapParser.Math_op_ifContext ctx) {
+    public Node visitPlace_feature_regular(MapParser.Place_feature_regularContext ctx) {
         return null;
     }
 
@@ -155,6 +147,16 @@ public class ParseTreeToAST extends AbstractParseTreeVisitor<Node> implements Ma
     }
 
     @Override
+    public Node visitXytuple_regular(MapParser.Xytuple_regularContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Node visitQuoted_text_regular(MapParser.Quoted_text_regularContext ctx) {
+        return null;
+    }
+
+    @Override
     public Node visitQuoted_text_func(MapParser.Quoted_text_funcContext ctx) {
         return null;
     }
@@ -170,12 +172,18 @@ public class ParseTreeToAST extends AbstractParseTreeVisitor<Node> implements Ma
     }
 
     @Override
-    public Node visitComparison_expressions(MapParser.Comparison_expressionsContext ctx) {
+    public Node visitComparison(MapParser.ComparisonContext ctx) {
+        return null;
+    }
+
+
+    @Override
+    public Node visitMath_expression(MapParser.Math_expressionContext ctx) {
         return null;
     }
 
     @Override
-    public Node visitMath_expression(MapParser.Math_expressionContext ctx) {
+    public Node visitMath_compare_start(MapParser.Math_compare_startContext ctx) {
         return null;
     }
 
@@ -191,6 +199,11 @@ public class ParseTreeToAST extends AbstractParseTreeVisitor<Node> implements Ma
 
     @Override
     public Node visitQuoted_text_for_var(MapParser.Quoted_text_for_varContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Node visitArea_regular(MapParser.Area_regularContext ctx) {
         return null;
     }
 
@@ -261,6 +274,11 @@ public class ParseTreeToAST extends AbstractParseTreeVisitor<Node> implements Ma
 
     @Override
     public Node visitBoolean_antlr_expression(MapParser.Boolean_antlr_expressionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Node visitMath_regular(MapParser.Math_regularContext ctx) {
         return null;
     }
 }
