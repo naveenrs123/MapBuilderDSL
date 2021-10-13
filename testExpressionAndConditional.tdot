@@ -6,12 +6,11 @@ CREATE MAP {The Hot Desert} WITH DIMENSIONS [5,5] WITH COLOR #00FF80;
 DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1
 DEFINE FUNCTION makeWaves (x_start, x_stop):
 	START LOOP loop1, X FROM x_start TO x_stop INCREMENT BY 1:
-	    $IF #math compare $math X $end_math > $math Y $end_math:
+	    $IF #math compare X > Y:
 		    PLACE FEATURE wave WITH NAME {Blank} WITH LOCATION [X, 2] ON map
 		$ELSE:
-		    %assign X = #math compare $math 5 $end_math != $math 5 $end_math;
+		    %assign X = #math compare 5 != 5;
 		    %assign Y = #text compare {yes} == {yes};
-		    %assign Z = $math 5 + 5 $end_math;
 		    %assign var = {my text};
 		    %assign var2 = text_2;
 		    %assign var3 = %FALSE;
