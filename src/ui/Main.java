@@ -1,5 +1,6 @@
 package ui;
 
+import ast.MapEvaluator;
 import ast.Program;
 import org.antlr.runtime.MismatchedTokenException;
 import org.antlr.v4.runtime.CharStreams;
@@ -25,6 +26,9 @@ public class Main {
         MapParser parser = new MapParser(tokens);
         ParseTreeToAST visitor = new ParseTreeToAST();
         Program parsedProgram = visitor.visitProgram(parser.program());
+        MapEvaluator evaluator = new MapEvaluator();
+        parsedProgram.accept(evaluator);
+        Renderer renderer = new Renderer(MapEvaluator.map);
         System.out.println("Done parsing");
     }
 

@@ -6,12 +6,12 @@ public class PlaceFeature extends Statement {
 
     private final String featureType;
     private final String featureName;
-    private final XYTuple location;
+    private final XYTupleWithVariables location;
     private final boolean onMap;
     private final String regionName;
 
     public PlaceFeature(String featureType, String featureName,
-                            XYTuple location, boolean onMap, String regionName) {
+                        XYTupleWithVariables location, boolean onMap, String regionName) {
         this.featureType = featureType;
         this.featureName = featureName;
         this.location = location;

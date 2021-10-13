@@ -3,6 +3,7 @@ package parser;
 import Helpers.ExecutionOrderContext;
 import Helpers.StatementListEnum;
 import ast.*;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.awt.*;
@@ -86,49 +87,20 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Function visitFunction(FunctionContext ctx) {
-        ArrayList<ExecutionOrderContext> executionOrderList = new ArrayList<>();
         ArrayList<String> paramNames = new ArrayList<>();
         List<TerminalNode> textList = ctx.function_start().TEXT();
         String functionName = textList.get(0).getText();
         handleParamList(paramNames, textList);
+        ArrayList<Statement> statements = new ArrayList<>();
 
-        ArrayList<Loop> loops = new ArrayList<>();
-        ArrayList<Conditional> conditionals = new ArrayList<>();
-        ArrayList<PlaceFeature> placeFeatures = new ArrayList<>();
-        ArrayList<PlaceRegion> placeRegions = new ArrayList<>();
-        ArrayList<Assignment> assignments = new ArrayList<>();
+        for (Function_statementContext functionStatementCtx: ctx.function_statement()) {
+            Statement statement = visitFunction_statement(functionStatementCtx);
+            statements.add(statement);
+        }
 
-        for (Function_statementContext functionStatementCtx
-                : ctx.function_statement()) {
-            Loop loop = visitLoop(functionStatementCtx.loop());
-            Conditional conditional = visitConditional(functionStatementCtx.conditional());
-            PlaceFeature placeFeature = visitPlace_feature_from_func(functionStatementCtx.place_feature_from_func());
-            PlaceRegion placeRegion = visitPlace_region_from_func(functionStatementCtx.place_region_from_func());
-            Assignment assignment = visitAssignment(functionStatementCtx.assignment());
-
-            if (loop != null) {
-                loops.add(loop);
-                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.LOOP, loops.size() - 1));
-            }
-            if (conditional != null) {
-                conditionals.add(conditional);
-                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.CONDITIONAL, conditionals.size() - 1));
-            }
-            if (placeFeature != null) {
-                placeFeatures.add(placeFeature);
-                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.PLACE_FEATURE, placeFeatures.size() - 1));
-            }
-            if (placeRegion != null) {
-                placeRegions.add(placeRegion);
-                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.PLACE_REGION, placeRegions.size() - 1));
-            }
-            if (assignment != null) {
-                assignments.add(assignment);
-                executionOrderList.add(new ExecutionOrderContext(StatementListEnum.ASSIGNMENT, assignments.size() - 1));
-            }
-;        }
-
-        return new Function(functionName, paramNames, executionOrderList);
+        return new Function(functionName,
+                            paramNames,
+                            statements);
     }
 
     @Override
@@ -146,12 +118,41 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         if (loopStartCtx.LOOP_DECREMENT() != null) {
             counter = -counter;
         }
-        return new Loop(name, variable, start, stop, counter);
+        List<Statement> statements = new ArrayList<>();
+        for (Function_statementContext functionStatementCtx
+                : ctx.function_statement()) {
+            Statement statement = visitFunction_statement(functionStatementCtx);
+            if (statement != null) {
+                statements.add(statement);
+            }
+        }
+        return new Loop(name, variable, start, stop, counter, statements);
     }
 
     @Override
     public Conditional visitConditional(ConditionalContext ctx) {
-        return new Conditional();
+        if (ctx == null || ctx.isEmpty()) {
+            return null;
+        }
+        List<Statement> ifStatements = new ArrayList<>();
+        List<Statement> elseStatements = new ArrayList<>();
+        boolean inElse = false;
+        for (int i = 0; i< ctx.children.size(); i ++) {
+            ParseTree child = ctx.getChild(i);
+            if (child instanceof  Else_startContext) {
+                inElse = true;
+            } else if (child instanceof Function_statementContext context) {
+                Statement statement = visitFunction_statement(context);
+                if (statement != null) {
+                    if (inElse) {
+                        elseStatements.add(statement);
+                    } else {
+                        ifStatements.add(statement);
+                    }
+                }
+            }
+        }
+        return new Conditional(ifStatements, elseStatements);
     }
 
     @Override
@@ -195,13 +196,18 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitMath_op_if(Math_op_ifContext ctx) {
-        return super.visitMath_op_if(ctx);
-    }
-
-    @Override
     public Statement visitFunction_statement(Function_statementContext ctx) {
-        System.out.println(ctx.getChildCount());
+        if (ctx.loop() != null) {
+            return visitLoop(ctx.loop());
+        } else if (ctx.assignment() != null) {
+            return visitAssignment(ctx.assignment());
+        } else if (ctx.conditional() != null) {
+            return visitConditional(ctx.conditional());
+        } else if (ctx.place_feature_from_func() != null) {
+            return visitPlace_feature_from_func(ctx.place_feature_from_func());
+        } else if (ctx.place_region_from_func() != null) {
+            return visitPlace_region_from_func(ctx.place_region_from_func());
+        }
         return null;
     }
 
@@ -242,7 +248,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         }
         String featureType = ctx.TEXT().getText();
         String featureName = ctx.quoted_text().QUOTED_TEXT().getText();
-        XYTuple location = visitXytuple(ctx.xytuple());
+        XYTupleWithVariables location = visitXytuple(ctx.xytuple());
         boolean onMap = ctx.area().quoted_text() == null || ctx.area().quoted_text().isEmpty();
         String regionName = null;
         if (!onMap) {
@@ -279,7 +285,8 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Assignment visitAssignment(AssignmentContext ctx) {
-        return new Assignment();
+        String variableName = ctx.FUNCTION_STATEMENT_TEXT_TEXT().getText();
+        return new Assignment(variableName);
     }
 
     @Override
@@ -289,7 +296,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         }
         String featureType = ctx.FUNCTION_STATEMENT_TEXT_TEXT().getText();
         String featureName = ctx.quoted_text_func().FROM_FUNC_QUOTED_TEXT().getText();
-        XYTuple location = visitXytuple_func(ctx.xytuple_func());
+        XYTupleWithVariables location = visitXytuple_func(ctx.xytuple_func());
         boolean onMap = ctx.area_func().quoted_text() == null || ctx.area_func().quoted_text().isEmpty();
         String regionName = null;
         if (!onMap) {
@@ -319,10 +326,21 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public XYTuple visitXytuple_func(Xytuple_funcContext ctx) {
-        int x = Integer.parseInt(ctx.FROM_FUNC_TUPLE_TEXT(0).getText());
-        int y = Integer.parseInt(ctx.FROM_FUNC_TUPLE_TEXT(1).getText());
-        return new XYTuple(x, y);
+    public XYTupleWithVariables visitXytuple_func(Xytuple_funcContext ctx) {
+        String x_str = ctx.FROM_FUNC_TUPLE_TEXT(0).getText();
+        String y_str = ctx.FROM_FUNC_TUPLE_TEXT(1).getText();
+        int x = (isInteger(x_str)) ? Integer.parseInt(x_str) : -1;
+        int y = (isInteger(y_str)) ? Integer.parseInt(y_str) : -1;
+        return new XYTupleWithVariables(x, y, x_str, y_str);
+    }
+
+    private boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -337,6 +355,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Node visitExpression(ExpressionContext ctx) {
+
         return super.visitExpression(ctx);
     }
 
@@ -391,25 +410,15 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitMath(MathContext ctx) {
-        return super.visitMath(ctx);
-    }
-
-    @Override
-    public Node visitMath_op(Math_opContext ctx) {
-        return super.visitMath_op(ctx);
-    }
-
-    @Override
     public Node visitArea(AreaContext ctx) {
         return super.visitArea(ctx);
     }
 
     @Override
-    public XYTuple visitXytuple(XytupleContext ctx) {
+    public XYTupleWithVariables visitXytuple(XytupleContext ctx) {
         int x = Integer.parseInt(ctx.TUPLE_TEXT(0).getText());
         int y = Integer.parseInt(ctx.TUPLE_TEXT(1).getText());
-        return new XYTuple(x, y);
+        return new XYTupleWithVariables(x, y);
     }
 
     @Override

@@ -9,12 +9,14 @@ public class Function extends Node {
 
     private final String functionName;
     private final ArrayList<String> paramNames;
-    private final ArrayList<ExecutionOrderContext> executionOrder;
+    private ArrayList<Statement> statements;
 
-    public Function(String functionName, ArrayList<String> paramNames, ArrayList<ExecutionOrderContext> executionOrder) {
+    public Function(String functionName,
+                    ArrayList<String> paramNames,
+                    ArrayList<Statement> statements) {
         this.functionName = functionName;
         this.paramNames = paramNames;
-        this.executionOrder = executionOrder;
+        this.statements = statements;
     }
 
     public String getFunctionName() {
@@ -23,6 +25,10 @@ public class Function extends Node {
 
     public ArrayList<String> getParamNames() {
         return paramNames;
+    }
+
+    public ArrayList<Statement> getStatements() {
+        return statements;
     }
 
     @Override

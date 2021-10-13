@@ -11,7 +11,7 @@ public class PlaceRegion extends Statement {
     private final boolean displayLabels;
 
     public PlaceRegion(String regionType, String regionName, XYTuple location,
-                        XYTuple dimensions, boolean displayLabels) {
+                       XYTuple dimensions, boolean displayLabels) {
         this.regionType = regionType;
         this.regionName = regionName;
         this.location = location;

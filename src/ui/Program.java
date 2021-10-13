@@ -16,10 +16,10 @@ public class Program {
 
         JFrame frame = new JFrame();
         Map map = new Map(200, 200, RegionType.DESERT.getColor(), "My Map");
-        Region ocean = new Region(new Point(0, 0), 100, 200, RegionType.WATER, "ocean");
-        Region forest = new Region(new Point(100, 100), 50, 100, RegionType.FOREST, "");
-        Region forest2 = new Region(new Point(0, 150), 50, 200, RegionType.GRASS, "grass");
-        Region dessert = new Region(new Point(0, 100), 50, 100, RegionType.DESERT, "hi");
+        Region ocean = new Region(new Point(0, 0), 100, 200, RegionType.WATER, "ocean", false);
+        Region forest = new Region(new Point(100, 100), 50, 100, RegionType.FOREST, "", false);
+        Region forest2 = new Region(new Point(0, 150), 50, 200, RegionType.GRASS, "grass", false);
+        Region dessert = new Region(new Point(0, 100), 50, 100, RegionType.DESERT, "hi", false);
         Feature mountain = new Feature("mountains", new Point(120, 120), "", 32);
         Feature sea = new Feature("waves", new Point(50, 50), "wave boi", 32);
         ArrayList<Feature> features = new ArrayList<>();

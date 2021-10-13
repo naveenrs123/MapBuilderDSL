@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Region {
 
@@ -9,14 +10,22 @@ public class Region {
     private Integer width;
     private RegionType regionType;
     private String label;
+    private boolean showLabel;
+    private ArrayList<Feature> containedFeatures = new ArrayList<>();
 
-    public Region(Point corner, Integer height, Integer width, RegionType regionType, String label) {
+    public Region(Point corner,
+                  Integer height,
+                  Integer width,
+                  RegionType regionType,
+                  String label,
+                  boolean showLabel) {
         int ppp = Map.PIXELS_PER_POINT;
         this.corner = new Point(corner.x * ppp, corner.y * ppp);
         this.height = height * ppp;
         this.width = width * ppp;
         this.regionType = regionType;
         this.label = label;
+        this.showLabel = showLabel;
     }
 
 
@@ -38,5 +47,9 @@ public class Region {
 
     public String getLabel() {
         return label;
+    }
+
+    public void addContainedFeature(Feature feature) {
+        containedFeatures.add(feature);
     }
 }
