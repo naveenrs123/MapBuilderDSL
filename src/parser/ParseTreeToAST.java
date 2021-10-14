@@ -477,6 +477,15 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     @Override
     public Node visitBoolean_antlr_func(Boolean_antlr_funcContext ctx) {
         throw new UnsupportedOperationException("This method is not used.");
+
+    @Override
+    public Node visitArea(MapParser.AreaContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Node visitXytuple(MapParser.XytupleContext ctx) {
+        return null;
     }
 
     @Override
