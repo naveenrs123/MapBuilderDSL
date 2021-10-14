@@ -6,12 +6,12 @@ public class PlaceRegion extends Statement {
 
     private final String regionType;
     private final String regionName;
-    private final XYTuple location;
-    private final XYTuple dimensions;
+    private final XYTupleWithVariables location;
+    private final XYTupleWithVariables dimensions;
     private final boolean displayLabels;
 
-    public PlaceRegion(String regionType, String regionName, XYTuple location,
-                       XYTuple dimensions, boolean displayLabels) {
+    public PlaceRegion(String regionType, String regionName, XYTupleWithVariables location,
+                       XYTupleWithVariables dimensions, boolean displayLabels) {
         this.regionType = regionType;
         this.regionName = regionName;
         this.location = location;
@@ -27,11 +27,11 @@ public class PlaceRegion extends Statement {
         return regionName;
     }
 
-    public XYTuple getLocation() {
+    public XYTupleWithVariables getLocation() {
         return location;
     }
 
-    public XYTuple getDimensions() {
+    public XYTupleWithVariables getDimensions() {
         return dimensions;
     }
 

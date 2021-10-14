@@ -22,7 +22,12 @@ public class MapEvaluator<T> implements MapVisitor<T> {
     @Override
     public T visit(Program p) {
         p.getMap().accept(this);
-        p.getDef().accept(this);
+        for (DefineFeature defineFeature: Program.featureDefinitions) {
+            defineFeature.accept(this);
+        }
+        for (Function function: Program.functionDefinitions.values()) {
+            function.accept(this);
+        }
         p.getPlaceAndCall().accept(this);
         return null;
     }
@@ -34,17 +39,6 @@ public class MapEvaluator<T> implements MapVisitor<T> {
         int height = p.getHeight();
         int width = p.getWidth();
         map = new model.Map(height, width, color, title);
-        return null;
-    }
-
-    @Override
-    public T visit(Def p) {
-        for (DefineFeature defineFeature: p.getFeatureDefinitions()) {
-            defineFeature.accept(this);
-        }
-        for (Function function: p.getFunctions()) {
-            function.accept(this);
-        }
         return null;
     }
 
@@ -98,14 +92,9 @@ public class MapEvaluator<T> implements MapVisitor<T> {
 
     @Override
     public T visit(PlaceAndCall p) {
-        for (PlaceRegion placeRegion: p.getPlaceRegionList()) {
-            placeRegion.accept(this);
-        }
-        for (PlaceFeature placeFeature: p.getPlaceFeatureList()) {
-            placeFeature.accept(this);
-        }
-        for (FunctionCall functionCall: p.getFunctionCallList()) {
-            functionCall.accept(this);
+        // TODO: rework
+        for (Statement statement : p.getStatements()) {
+            statement.accept(this);
         }
         return null;
     }
@@ -150,12 +139,13 @@ public class MapEvaluator<T> implements MapVisitor<T> {
     @Override
     public T visit(FunctionCall p) {
         String functionName = p.getFunctionName();
-        ArrayList<String> values = p.getParamValues();
+        ArrayList<Variable<?>> values = p.getParameters();
         Function function = functionDefs.get(functionName);
         ArrayList<String> paramNames = function.getParamNames();
         for (Statement statement: function.getStatements()) {
-            statement.setParamsToValues(paramNames, values);
-            statement.setEvaluate(true);
+            // TODO: rework based on the param changes.
+            //statement.setParamsToValues(paramNames, values);
+            //statement.setEvaluate(true);
         }
         function.accept(this);
         return null;
