@@ -1,5 +1,9 @@
 package ast;
 
+/**
+ *
+ * @param <Y> Represents type of the value in the variable.
+ */
 public class Variable<Y> extends Statement {
 
     private String name;
@@ -17,6 +21,10 @@ public class Variable<Y> extends Statement {
 
     public Y getValue() {
         return value;
+    }
+
+    public String getValueType() {
+       return this.value.getClass().getSimpleName();
     }
 
     @Override

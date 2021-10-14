@@ -56,6 +56,14 @@ public class Comparison<X, Y> extends Node {
         this.secondVal = secondVal;
     }
 
+    public String getFirstValType() {
+        return this.firstVal.getClass().getSimpleName();
+    }
+
+    public String getSecondValType() {
+        return this.secondVal.getClass().getSimpleName();
+    }
+
     @Override
     public <T> T accept(MapVisitor<T> v) {
         return null;
