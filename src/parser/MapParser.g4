@@ -19,13 +19,12 @@ loop_end: LOOP_END FUNCTION_STATEMENT_TEXT_TEXT FUNCTION_STATEMENT_END_OF_LINE ;
 
 // IF CONDITION
 conditional: if_start function_statement+ (else_start function_statement+ else_end)? if_end;
-if_start: IF_SIGNATURE_START comparison_if COMPARISON_FROM_IF_END;
+if_start: IF_SIGNATURE_START (math_compare_if | quote_compare_if) COMPARISON_FROM_IF_END;
 else_start: ELSE_START;
 else_end: ELSE_END;
 if_end: IF_END;
 
 // IF SPECIFIC THIGNS
-comparison_if: math_compare_if | quote_compare_if;
 math_compare_if: MATH_COMPARE_FROM_IF_START MATH_FROM_IF_TEXT math_comparison_op MATH_FROM_IF_TEXT;
 quote_compare_if: QUOTE_COMPARE_FROM_IF_START quoted_text quote_comparison_op quoted_text;
 
@@ -50,7 +49,7 @@ xytuple_func: FROM_FUNC_OPENING_BRACKET FROM_FUNC_TUPLE_TEXT FROM_FUNC_TUPLE_SEP
 quoted_text_func: FROM_FUNC_OPENING_QUOTE FROM_FUNC_QUOTED_TEXT FROM_FUNC_CLOSING_QUOTE;
 area_func: AREA_FROM_FUNC_MAP | (AREA_FRM_FUNC_REGION quoted_text); //REVIEW: COMPARE TO REVISED GRAMMAR
 
-expression: (math_compare | quote_compare | quoted_text_from_expression | TEXT | EXPRESSION_TEXT | boolean_antlr_expression | quoted_text_for_var) EXPRESSION_END; // | quoted_text
+expression: (math_compare | quote_compare | quoted_text_for_var | EXPRESSION_TEXT | boolean_antlr_expression) EXPRESSION_END; // | quoted_text
 
 //expression specific things
 quoted_text_from_expression:  QUOTE_COMPARE_FROM_EXPRESSION_QUOTED_TEXT QUOTE_COMPARE_FROM_EXPRESSION_CLOSING_QUOTE;

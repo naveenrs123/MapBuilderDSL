@@ -1,11 +1,12 @@
 package parser;
 
+import Helpers.ASTHelpers;
 import ast.*;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.awt.*;
-import java.beans.Expression;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,12 +16,32 @@ import static parser.MapParser.*;
 
 public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
+    public ArrayList<String> errors = new ArrayList<>();
+
+    private boolean badContext(ParserRuleContext ctx) {
+        return (ctx == null || ctx.isEmpty() || ctx.exception != null);
+    }
+
+    //region AST Visit Methods
     @Override
     public Program visitProgram(ProgramContext ctx) {
-        Map map = visitMap(ctx.map());
-        definitions(ctx.def());
-        PlaceAndCall placeAndCall = visitPlace_and_call(ctx.place_and_call());
-        return new Program(map, placeAndCall);
+        Map map;
+        PlaceAndCall placeAndCall = null;
+
+        if (badContext(ctx.map())) {
+            errors.add("ERROR: Missing #start map.");
+        } else {
+            map = visitMap(ctx.map());
+            if (!badContext(ctx.def())) {
+                definitions(ctx.def());
+            }
+
+            if (!badContext(ctx.place_and_call())) {
+                placeAndCall = visitPlace_and_call(ctx.place_and_call());
+            }
+            return new Program(map, placeAndCall);
+        }
+        return null;
     }
 
     @Override
@@ -71,10 +92,10 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         ArrayList<String> paramNames = new ArrayList<>();
         List<TerminalNode> textList = ctx.function_start().TEXT();
         String functionName = textList.get(0).getText();
-        handleParamList(paramNames, textList);
+        ASTHelpers.handleParamList(paramNames, textList);
 
         ArrayList<Statement> statements = new ArrayList<>();
-        for (Function_statementContext functionStatementCtx: ctx.function_statement()) {
+        for (Function_statementContext functionStatementCtx : ctx.function_statement()) {
             Statement statement = visitFunction_statement(functionStatementCtx);
             if (statement != null) {
                 statements.add(statement);
@@ -114,26 +135,43 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         if (ctx == null || ctx.isEmpty()) {
             return null;
         }
-        List<Statement> ifStatements = new ArrayList<>();
-        List<Statement> elseStatements = new ArrayList<>();
-        boolean inElse = false;
 
-        for (int i = 0; i < ctx.children.size(); i++) {
-            ParseTree child = ctx.getChild(i);
-            if (child instanceof Else_startContext) {
-                inElse = true;
-            } else if (child instanceof Function_statementContext context) {
-                Statement statement = visitFunction_statement(context);
-                if (statement != null) {
-                    if (inElse) {
-                        elseStatements.add(statement);
-                    } else {
-                        ifStatements.add(statement);
+        if (badContext(ctx.if_start())) {
+            errors.add("ERROR: Ill-formed IF");
+            return null;
+        } else {
+            Comparison<?, ?> condition = visitIf_start(ctx.if_start());
+            List<Statement> ifStatements = new ArrayList<>();
+            List<Statement> elseStatements = new ArrayList<>();
+            boolean inElse = false;
+
+            for (int i = 0; i < ctx.children.size(); i++) {
+                ParseTree child = ctx.getChild(i);
+                if (child instanceof Else_startContext) {
+                    inElse = true;
+                } else if (child instanceof Function_statementContext context) {
+                    Statement statement = visitFunction_statement(context);
+                    if (statement != null) {
+                        if (inElse) {
+                            elseStatements.add(statement);
+                        } else {
+                            ifStatements.add(statement);
+                        }
                     }
                 }
             }
+            return new Conditional(ifStatements, elseStatements, condition);
         }
-        return new Conditional(ifStatements, elseStatements);
+    }
+
+    @Override
+    public Comparison<?, ?> visitIf_start(If_startContext ctx) {
+        if (!badContext(ctx.math_compare_if())) {
+            return visitMath_compare_if(ctx.math_compare_if());
+        } else if (!badContext(ctx.quote_compare_if())) {
+            return visitQuote_compare_if(ctx.quote_compare_if());
+        }
+        return null;
     }
 
     @Override
@@ -191,7 +229,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         String featureName = ctx.quoted_text().QUOTED_TEXT().getText();
         XYTupleWithVariables location = visitXytuple(ctx.xytuple());
         boolean onMap = ctx.area().quoted_text() == null || ctx.area().quoted_text().isEmpty();
-        String regionName = null;
+        String regionName;
         if (!onMap) {
             regionName = ctx.area().quoted_text().QUOTED_TEXT().getText();
         } else {
@@ -215,7 +253,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         ArrayList<String> paramValueStrings = new ArrayList<>();
         List<TerminalNode> textList = ctx.TEXT();
         String functionName = textList.get(0).getText();
-        handleParamList(paramValueStrings, textList);
+        ASTHelpers.handleParamList(paramValueStrings, textList);
 
         String[] paramNames = Program.retrieveParameterListForFunction(functionName);
 
@@ -286,57 +324,12 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         return new PlaceRegion(regionType, regionName, location, dimensions, displayLabels);
     }
 
-    public Variable<?> handleExpressionForVariable(ExpressionContext ctx, String variableName) {
-        if (ctx.quote_compare() != null) {
-            return new Variable<>(variableName, handleQuoteCompare(ctx.quote_compare()));
-        } else if (ctx.math_compare() != null) {
-            return new Variable<>(variableName, handleMathCompare(ctx.math_compare()));
-        }
-        return null;
-    }
-
-    public Comparison<String, String> handleQuoteCompare(Quote_compareContext ctx) {
-        String firstText = ctx.quoted_text_from_expression().QUOTE_COMPARE_FROM_EXPRESSION_QUOTED_TEXT().getText();
-        String secondText = ctx.quoted_text_from_expression_second().SECOND_QUOTE_COMPARE_FROM_EXPRESSION_QUOTED_TEXT().getText();
-        String operator = retrieveQuoteComparisonOp(ctx.quote_comparison_op());
-        return new Comparison<>(firstText, secondText, operator);
-    }
-
-    public Comparison<Integer, Integer> handleMathCompare(Math_compareContext ctx) {
-        String firstMath = ctx.MATH_FROM_EXPRESSION_TEXT(0).getText();
-        String secondMath = ctx.MATH_FROM_EXPRESSION_TEXT(1).getText();
-        Integer firstVal = isInteger(firstMath) ? Integer.parseInt(firstMath) : null;
-        Integer secondVal = isInteger(secondMath) ? Integer.parseInt(secondMath) : null;
-        String operator = retrieveMathComparisonOp(ctx.math_comparison_op());
-        return new Comparison<>(firstMath, secondMath, firstVal, secondVal, operator);
-    }
-
-    public String retrieveQuoteComparisonOp(Quote_comparison_opContext ctx) {
-        if (ctx.QUOTE_COMPARISON_OP_FROM_EXPRESSION() != null) {
-            return ctx.QUOTE_COMPARISON_OP_FROM_EXPRESSION().getText();
-        } else if (ctx.QUOTE_COMPARISON_OP_FROM_IF() != null) {
-            return ctx.QUOTE_COMPARISON_OP_FROM_IF().getText();
-        } else {
-            return null;
-        }
-    }
-
-    public String retrieveMathComparisonOp(Math_comparison_opContext ctx) {
-        if (ctx.MATH_COMPARE_COMPARISON_OP() != null) {
-            return ctx.MATH_COMPARE_COMPARISON_OP().getText();
-        } else if (ctx.MATH_COMPARE_FROM_IF_COMPARISON_OP() != null) {
-            return ctx.MATH_COMPARE_FROM_IF_COMPARISON_OP().getText();
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public XYTupleWithVariables visitXytuple_func(Xytuple_funcContext ctx) {
         String x_str = ctx.FROM_FUNC_TUPLE_TEXT(0).getText();
         String y_str = ctx.FROM_FUNC_TUPLE_TEXT(1).getText();
-        int x = (isInteger(x_str)) ? Integer.parseInt(x_str) : -1;
-        int y = (isInteger(y_str)) ? Integer.parseInt(y_str) : -1;
+        int x = (ASTHelpers.isInteger(x_str)) ? Integer.parseInt(x_str) : -1;
+        int y = (ASTHelpers.isInteger(y_str)) ? Integer.parseInt(y_str) : -1;
         return new XYTupleWithVariables(x, y, x_str, y_str);
     }
 
@@ -348,73 +341,45 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitIf_start(If_startContext ctx) {
-        return super.visitIf_start(ctx);
-    }
-
-    @Override
-    public Node visitElse_start(Else_startContext ctx) {
-        return super.visitElse_start(ctx);
-    }
-
-    @Override
-    public Node visitElse_end(Else_endContext ctx) {
-        return super.visitElse_end(ctx);
-    }
-
-    @Override
-    public Node visitIf_end(If_endContext ctx) {
-        return super.visitIf_end(ctx);
-    }
-
-    @Override
-    public Node visitComparison_if(Comparison_ifContext ctx) {
-        return super.visitComparison_if(ctx);
-    }
-
-    @Override
-    public Node visitMath_compare_if(Math_compare_ifContext ctx) {
-        return super.visitMath_compare_if(ctx);
-    }
-
-    @Override
-    public Node visitQuote_compare_if(Quote_compare_ifContext ctx) {
-        return super.visitQuote_compare_if(ctx);
-    }
-
-    @Override
-    public Node visitQuoted_text_func(Quoted_text_funcContext ctx) {
-        return super.visitQuoted_text_func(ctx);
-    }
-
-    @Override
-    public Node visitArea_func(Area_funcContext ctx) {
-        return super.visitArea_func(ctx);
-    }
-
-    @Override
-    public Node visitQuoted_text_for_var(Quoted_text_for_varContext ctx) {
-        return super.visitQuoted_text_for_var(ctx);
-    }
-
-    @Override
-    public Node visitMath_comparison_op(Math_comparison_opContext ctx) {
-        return super.visitMath_comparison_op(ctx);
-    }
-
-    @Override
-    public Node visitQuote_comparison_op(Quote_comparison_opContext ctx) {
-        return super.visitQuote_comparison_op(ctx);
+    public Comparison<String, String> visitQuote_compare(Quote_compareContext ctx) {
+        String firstText = ctx.quoted_text_from_expression().QUOTE_COMPARE_FROM_EXPRESSION_QUOTED_TEXT().getText();
+        String secondText = ctx.quoted_text_from_expression_second().SECOND_QUOTE_COMPARE_FROM_EXPRESSION_QUOTED_TEXT().getText();
+        String operator = retrieveQuoteComparisonOp(ctx.quote_comparison_op());
+        return new Comparison<>(firstText, secondText, firstText, secondText, operator);
     }
 
 
     @Override
-    public Node visitBoolean_antlr_expression(Boolean_antlr_expressionContext ctx) {
-        return super.visitBoolean_antlr_expression(ctx);
+    public Comparison<String, String> visitQuote_compare_if(Quote_compare_ifContext ctx) {
+        String firstText = ctx.quoted_text(0).QUOTED_TEXT().getText();
+        String secondText = ctx.quoted_text(1).QUOTED_TEXT().getText();
+        String operator = retrieveQuoteComparisonOp(ctx.quote_comparison_op());
+        return new Comparison<>(firstText, secondText, firstText, secondText, operator);
     }
+
+    @Override
+    public Comparison<Integer, Integer> visitMath_compare(Math_compareContext ctx) {
+        String firstMath = ctx.MATH_FROM_EXPRESSION_TEXT(0).getText();
+        String secondMath = ctx.MATH_FROM_EXPRESSION_TEXT(1).getText();
+        Integer firstVal = ASTHelpers.isInteger(firstMath) ? Integer.parseInt(firstMath) : null;
+        Integer secondVal = ASTHelpers.isInteger(secondMath) ? Integer.parseInt(secondMath) : null;
+        String operator = retrieveMathComparisonOp(ctx.math_comparison_op());
+        return new Comparison<>(firstMath, secondMath, firstVal, secondVal, operator);
+    }
+
+    @Override
+    public Comparison<Integer, Integer> visitMath_compare_if(Math_compare_ifContext ctx) {
+        String firstMath = ctx.MATH_FROM_IF_TEXT(0).getText();
+        String secondMath = ctx.MATH_FROM_IF_TEXT(1).getText();
+        Integer firstVal = ASTHelpers.isInteger(firstMath) ? Integer.parseInt(firstMath) : null;
+        Integer secondVal = ASTHelpers.isInteger(secondMath) ? Integer.parseInt(secondMath) : null;
+        String operator = retrieveMathComparisonOp(ctx.math_comparison_op());
+        return new Comparison<>(firstMath, secondMath, firstVal, secondVal, operator);
+    }
+    //endregion
 
     //region Helpers
-    public void definitions(DefContext ctx) {
+    private void definitions(DefContext ctx) {
         if (ctx == null || ctx.isEmpty()) {
             return;
         }
@@ -434,24 +399,56 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         Program.functionDefinitions = functionDefinitions;
     }
 
-    private boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException | NullPointerException e) {
-            return false;
+    private Variable<?> handleExpressionForVariable(ExpressionContext ctx, String variableName) {
+        if (ctx.quote_compare() != null && !ctx.quote_compare().isEmpty()) {
+            return new Variable<>(variableName, visitQuote_compare(ctx.quote_compare()));
+        } else if (ctx.math_compare() != null && !ctx.math_compare().isEmpty()) {
+            return new Variable<>(variableName, visitMath_compare(ctx.math_compare()));
+        } else if (ctx.quoted_text_for_var() != null && !ctx.quoted_text_for_var().isEmpty()) {
+            return new Variable<>(variableName, ctx.quoted_text_for_var().EXPRESSION_QUOTED_TEXT_FOR_VAR().getText());
+        } else if (ctx.boolean_antlr_expression() != null && !ctx.boolean_antlr_expression().isEmpty()) {
+            return new Variable<>(variableName, handleBooleanExpression(ctx.boolean_antlr_expression()));
+        } else if (ctx.EXPRESSION_TEXT() != null) {
+            String valText = ctx.EXPRESSION_TEXT().getText();
+            boolean isInteger = ASTHelpers.isInteger(valText);
+            Integer val = isInteger ? Integer.parseInt(valText) : null;
+            if (isInteger) {
+                return new Variable<>(variableName, val);
+            } else {
+                return new Variable<>(variableName, val, valText);
+            }
         }
-        return true;
+        return null;
     }
 
-    private void handleParamList(ArrayList<String> paramValues, List<TerminalNode> textList) {
-        List<TerminalNode> params = textList.size() > 1
-                ? textList.subList(1, textList.size())
-                : null;
+    private Boolean handleBooleanExpression(Boolean_antlr_expressionContext ctx) {
+        String boolText = "";
+        if (ctx.BOOLEAN_FROM_EXPRESSION_TRUE() != null) {
+            boolText = ctx.BOOLEAN_FROM_EXPRESSION_TRUE().getText();
+        } else if (ctx.BOOLEAN_FROM_EXPRESSION_FALSE() != null) {
+            boolText = ctx.BOOLEAN_FROM_EXPRESSION_FALSE().getText();
+        }
+        // NOTE: This parsing will force anything that is not case-insensitive equivalent to "true" to equal false.
+        return Boolean.parseBoolean(boolText);
+    }
 
-        if (params != null) {
-            for (TerminalNode param : params) {
-                paramValues.add(param.getText());
-            }
+    private String retrieveQuoteComparisonOp(Quote_comparison_opContext ctx) {
+        if (ctx.QUOTE_COMPARISON_OP_FROM_EXPRESSION() != null) {
+            return ctx.QUOTE_COMPARISON_OP_FROM_EXPRESSION().getText();
+        } else if (ctx.QUOTE_COMPARISON_OP_FROM_IF() != null) {
+            return ctx.QUOTE_COMPARISON_OP_FROM_IF().getText();
+        } else {
+            return null;
+        }
+    }
+
+    private String retrieveMathComparisonOp(Math_comparison_opContext ctx) {
+        if (ctx.MATH_COMPARE_COMPARISON_OP() != null) {
+            return ctx.MATH_COMPARE_COMPARISON_OP().getText();
+        } else if (ctx.MATH_COMPARE_FROM_IF_COMPARISON_OP() != null) {
+            return ctx.MATH_COMPARE_FROM_IF_COMPARISON_OP().getText();
+        } else {
+            return null;
         }
     }
     //endregion
@@ -479,7 +476,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Node visitArea(MapParser.AreaContext ctx) {
-        return super.visitArea(ctx);
+        throw new UnsupportedOperationException("This method is not used.");
     }
 
     @Override
@@ -523,13 +520,49 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitMath_compare(Math_compareContext ctx) {
-        return super.visitMath_compare(ctx);
+    public Node visitElse_start(Else_startContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
     }
 
     @Override
-    public Node visitQuote_compare(Quote_compareContext ctx) {
-        return super.visitQuote_compare(ctx);
+    public Node visitElse_end(Else_endContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitIf_end(If_endContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitQuoted_text_func(Quoted_text_funcContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitArea_func(Area_funcContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitQuoted_text_for_var(Quoted_text_for_varContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitMath_comparison_op(Math_comparison_opContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitQuote_comparison_op(Quote_comparison_opContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
+    }
+
+
+    @Override
+    public Node visitBoolean_antlr_expression(Boolean_antlr_expressionContext ctx) {
+        throw new UnsupportedOperationException("This method is not used.");
     }
     //endregion
 }
