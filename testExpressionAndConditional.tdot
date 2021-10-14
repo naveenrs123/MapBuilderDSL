@@ -5,15 +5,19 @@ CREATE MAP {The Hot Desert} WITH DIMENSIONS [5,5] WITH COLOR #00FF80;
 #start definitions
 DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1;
 DEFINE FUNCTION makeWaves (x_start, x_stop):
+    PLACE REGION water WITH NAME {Chonky Ocean} WITH LOCATION [2,2] WITH DIMENSIONS [2,3];
 	START LOOP loop1, X FROM x_start TO x_stop INCREMENT BY 1:
-	    $IF #math compare X > Y:
+	    $IF #math compare X > 2:
 		    PLACE FEATURE wave WITH NAME {Blank} WITH LOCATION [X, 2] ON map;
 		$ELSE:
 		    %assign X = #math compare 5 != 5;
 		    %assign Y = #text compare {yes} == {yes};
 		    %assign var = {my text};
+		    %assign text_2 = {who is this};
 		    %assign var2 = text_2;
 		    %assign var3 = %FALSE;
+		    %assign var4 = %TRUE;
+		    %assign var5 = 6;
 		$END ELSE;
         $END IF;
 	END LOOP loop1;

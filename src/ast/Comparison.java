@@ -4,18 +4,14 @@ public class Comparison<X, Y> extends Node {
 
     private String first;
     private String second;
-    private X firstVal;
-    private Y secondVal;
+    private X firstVal = null;
+    private Y secondVal = null;
     private String operator;
-    private boolean hasMissingValues = true;
 
     public Comparison(String first, String second, X firstVal, Y secondVal, String operator) {
         this(first, second, operator);
         this.firstVal = firstVal;
         this.secondVal = secondVal;
-        if (this.firstVal != null && this.secondVal != null) {
-            this.hasMissingValues = false;
-        }
     }
 
     public Comparison(String first, String second, String operator) {
@@ -44,16 +40,20 @@ public class Comparison<X, Y> extends Node {
         return operator;
     }
 
-    public boolean hasMissingValues() {
-        return hasMissingValues;
-    }
-
     public void setFirstVal(X firstVal) {
         this.firstVal = firstVal;
     }
 
     public void setSecondVal(Y secondVal) {
         this.secondVal = secondVal;
+    }
+
+    public boolean isFirstReference() {
+        return this.firstVal != null;
+    }
+
+    public boolean isSecondReference() {
+        return this.secondVal != null;
     }
 
     public String getFirstValType() {
