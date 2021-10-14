@@ -1,6 +1,7 @@
 package ast;
 
 import model.Feature;
+import model.FeaturePlacement;
 import model.Region;
 import model.RegionType;
 
@@ -13,7 +14,8 @@ public class MapEvaluator<T> implements MapVisitor<T> {
 
     public static java.util.Map<String, Region> regions = new HashMap<>();
     public static java.util.Map<String, Feature> features = new HashMap<>();
-    public static java.util.Map<String, ArrayList<Point>> featurePlacements = new HashMap<>();
+    // Map of RegionName (or "map") to feature placements
+    public static java.util.Map<String, java.util.Map<String, ArrayList<FeaturePlacement>>> featurePlacements = new HashMap<>();
     public static java.util.Map<String, Object> variables = new HashMap<>();
     public static java.util.Map<String, Function> functionDefs = new HashMap<>();
     public static java.util.Map<String, java.util.Map<String, String>> funCalls = new HashMap<>();
@@ -103,7 +105,7 @@ public class MapEvaluator<T> implements MapVisitor<T> {
     public T visit(PlaceRegion p) {
         String regionName = p.getRegionName();
         String regionType = p.getRegionType();
-        RegionType type = RegionType.valueOf(regionType);
+        RegionType type = RegionType.valueOf(regionType.toUpperCase());
         Point corner = new Point(p.getLocation().getX(), p.getLocation().getY());
         int height = p.getDimensions().getX();
         int width = p.getDimensions().getY();
@@ -114,25 +116,29 @@ public class MapEvaluator<T> implements MapVisitor<T> {
 
     @Override
     public T visit(PlaceFeature p) {
-        String id = p.getFeatureName();
-        Point location = new Point(p.getLocation().getX(), p.getLocation().getY());
+        String id = p.getFeatureType();
+        String name = p.getFeatureName();
+        int ppp = model.Map.PIXELS_PER_POINT;
+        Point location = new Point(p.getLocation().getX() * ppp, p.getLocation().getY() * ppp);
         String regionName = p.getRegionName();
         Feature feature = features.get(id);
         if (feature == null) {
             System.out.println("Implement dynamic error");
         }
         assert feature != null;
-        ArrayList<Point> placements = (featurePlacements.containsKey(id)) ? featurePlacements.get(id): new ArrayList<>();
-        placements.add(location);
-        featurePlacements.put(id, placements);
         if (!Objects.equals(regionName, "map")) {
             Region region = regions.get(regionName);
             if (region == null) {
                 System.out.println("Implement dynamic error");
             }
             assert region != null;
-            region.addContainedFeature(feature);
         }
+        java.util.Map<String, ArrayList<FeaturePlacement>> featureToPlacements = (featurePlacements.containsKey(regionName)) ? featurePlacements.get(regionName): new HashMap<>();
+        ArrayList<FeaturePlacement> placements = (featureToPlacements.containsKey(id)) ? featureToPlacements.get(id): new ArrayList<>();
+        FeaturePlacement featurePlacement = new FeaturePlacement(feature.getId(), name, location, p.isDisplayLabels());
+        placements.add(featurePlacement);
+        featureToPlacements.put(id, placements);
+        featurePlacements.put(regionName, featureToPlacements);
         return null;
     }
 

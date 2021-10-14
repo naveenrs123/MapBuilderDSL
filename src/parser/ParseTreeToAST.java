@@ -194,6 +194,8 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         String regionName = null;
         if (!onMap) {
             regionName = ctx.area().quoted_text().QUOTED_TEXT().getText();
+        } else {
+            regionName = "map";
         }
         boolean displayLabels = true;
         if (ctx.boolean_antlr_reg() != null && !ctx.isEmpty()) {
@@ -405,10 +407,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         return super.visitQuote_comparison_op(ctx);
     }
 
-    @Override
-    public Node visitArea(AreaContext ctx) {
-        return super.visitArea(ctx);
-    }
 
     @Override
     public Node visitBoolean_antlr_expression(Boolean_antlr_expressionContext ctx) {
@@ -477,6 +475,11 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     @Override
     public Node visitBoolean_antlr_func(Boolean_antlr_funcContext ctx) {
         throw new UnsupportedOperationException("This method is not used.");
+    }
+
+    @Override
+    public Node visitArea(MapParser.AreaContext ctx) {
+        return super.visitArea(ctx);
     }
 
     @Override

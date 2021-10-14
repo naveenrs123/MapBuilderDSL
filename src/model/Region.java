@@ -11,7 +11,6 @@ public class Region {
     private RegionType regionType;
     private String label;
     private boolean showLabel;
-    private ArrayList<Feature> containedFeatures = new ArrayList<>();
 
     public Region(Point corner,
                   Integer height,
@@ -49,7 +48,7 @@ public class Region {
         return label;
     }
 
-    public void addContainedFeature(Feature feature) {
-        containedFeatures.add(feature);
+    public boolean isShowLabel() {
+        return showLabel;
     }
 }
