@@ -26,7 +26,7 @@ public class Main {
         MapParser parser = new MapParser(tokens);
         ParseTreeToAST visitor = new ParseTreeToAST();
         Program parsedProgram = visitor.visitProgram(parser.program());
-        MapEvaluator evaluator = new MapEvaluator();
+        MapEvaluator<Void> evaluator = new MapEvaluator<>();
         parsedProgram.accept(evaluator);
         Renderer renderer = new Renderer(MapEvaluator.map);
         System.out.println("Done parsing");

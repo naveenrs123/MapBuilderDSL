@@ -1,41 +1,29 @@
 package ast;
 
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class FunctionCall extends Statement {
 
     private final String functionName;
-    private final ArrayList<String> paramValues;
+    private final ArrayList<Variable<?>> parameters;
 
-    public FunctionCall(String functionName, ArrayList<String> paramValues) {
+    public FunctionCall(String functionName, ArrayList<Variable<?>> parameters) {
         this.functionName = functionName;
-        this.paramValues = paramValues;
+        this.parameters = parameters;
     }
 
     public String getFunctionName() {
         return functionName;
     }
 
-    public ArrayList<String> getParamValues() {
-        return paramValues;
+    public ArrayList<Variable<?>> getParameters() {
+        return parameters;
     }
 
     @Override
     public <T> T accept(MapVisitor<T> v) {
         return null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FunctionCall that = (FunctionCall) o;
-        return functionName.equals(that.functionName) && paramValues.equals(that.paramValues);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(functionName, paramValues);
     }
 }
