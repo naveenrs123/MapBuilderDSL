@@ -10,7 +10,7 @@ public class Loop extends Statement {
     private final String start;
     private final String stop;
     private final int counter;
-    private List<Statement> statements;
+    private final List<Statement> statements;
 
     public Loop(String name, String variable, String start, String stop, int counter, List<Statement> statements) {
         this.name = name;

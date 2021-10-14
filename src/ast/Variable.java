@@ -1,6 +1,6 @@
 package ast;
 
-public class Variable<Y> extends Node {
+public class Variable<Y> extends Statement {
 
     private String name;
     private Y value;
