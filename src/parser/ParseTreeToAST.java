@@ -301,8 +301,8 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     public Comparison<Integer, Integer> handleMathCompare(Math_compareContext ctx) {
-        String firstMath = ctx.math_expression(0).MATH_FROM_EXPRESSION_TEXT().getText();
-        String secondMath = ctx.math_expression(1).MATH_FROM_EXPRESSION_TEXT().getText();
+        String firstMath = ctx.MATH_FROM_EXPRESSION_TEXT(0).getText();
+        String secondMath = ctx.MATH_FROM_EXPRESSION_TEXT(1).getText();
         Integer firstVal = isInteger(firstMath) ? Integer.parseInt(firstMath) : null;
         Integer secondVal = isInteger(secondMath) ? Integer.parseInt(secondMath) : null;
         String operator = retrieveMathComparisonOp(ctx.math_comparison_op());
@@ -381,11 +381,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitMath_if(Math_ifContext ctx) {
-        return super.visitMath_if(ctx);
-    }
-
-    @Override
     public Node visitQuoted_text_func(Quoted_text_funcContext ctx) {
         return super.visitQuoted_text_func(ctx);
     }
@@ -393,11 +388,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     @Override
     public Node visitArea_func(Area_funcContext ctx) {
         return super.visitArea_func(ctx);
-    }
-
-    @Override
-    public Node visitMath_expression(Math_expressionContext ctx) {
-        return super.visitMath_expression(ctx);
     }
 
     @Override
