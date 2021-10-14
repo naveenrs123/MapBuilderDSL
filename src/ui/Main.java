@@ -7,8 +7,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
-import parser.MapParser;
 import parser.MapLexer;
+import parser.MapParser;
 import parser.ParseTreeToAST;
 
 import java.io.IOException;
