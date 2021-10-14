@@ -9,16 +9,16 @@ public class PlaceFeature extends Statement {
     private final XYTupleWithVariables location;
     private final boolean onMap;
     private final String regionName;
-    private final boolean displayLabels;
+    private final boolean displayLabel;
 
     public PlaceFeature(String featureType, String featureName,
-                        XYTupleWithVariables location, boolean onMap, String regionName, boolean displayLabels) {
+                        XYTupleWithVariables location, boolean onMap, String regionName, boolean displayLabel) {
         this.featureType = featureType;
         this.featureName = featureName;
         this.location = location;
         this.onMap = onMap;
         this.regionName = regionName;
-        this.displayLabels = displayLabels;
+        this.displayLabel = displayLabel;
     }
 
     public String getFeatureType() {
@@ -39,11 +39,12 @@ public class PlaceFeature extends Statement {
         return regionName;
     }
 
-    public boolean isDisplayLabels() { return displayLabels; }
+    public boolean isDisplayLabels() { return displayLabel; }
+
 
     @Override
     public <T> T accept(MapVisitor<T> v) {
-        return null;
+        return v.visit(this);
     }
 
     @Override

@@ -1,48 +1,68 @@
 package ui;
 
 import model.Feature;
+import model.FeaturePlacement;
 import model.Map;
 import model.Region;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Renderer {
 
-    private Map map;
-    private Integer ppp = Map.PIXELS_PER_POINT;
+    private final Map map;
+    private final java.util.Map<String, Feature> features;
+    private final java.util.Map<String, Region> regions;
+    private final java.util.Map<String, java.util.Map<String, ArrayList<FeaturePlacement>>> featurePlacements;
+    private final Integer ppp = Map.PIXELS_PER_POINT;
 
 
-    public Renderer(Map map) {
+    public Renderer(Map map,
+                    java.util.Map<String, Feature> features,
+                    java.util.Map<String, Region> regions,
+                    java.util.Map<String, java.util.Map<String, ArrayList<FeaturePlacement>>> featurePlacements) {
         this.map = map;
+        this.features = features;
+        this.regions = regions;
+        this.featurePlacements = featurePlacements;
     }
 
-    public BufferedImage renderMap(ArrayList<Region> regions,
-                                   ArrayList<Feature> features) {
+    public BufferedImage renderMap() {
 
-        for (Region region: regions) {
+        for (Region region: regions.values()) {
             renderRegion(region);
         }
-        for (Feature feature: features) {
-            renderFeature(feature);
-        }
-        //drawGrid();
+        renderMapFeatures();
         return map.getImage();
     }
 
-    private void renderFeature(Feature feature) {
+    private void renderMapFeatures() {
+        java.util.Map<String, ArrayList<FeaturePlacement>> placements = featurePlacements.get("map");
+        for (java.util.Map.Entry<String, ArrayList<FeaturePlacement>> entry: placements.entrySet()) {
+            String featureName = entry.getKey();
+            Feature feature = features.get(featureName);
+            for (FeaturePlacement placement: entry.getValue()) {
+                renderFeature(feature, placement);
+            }
+        }
+    }
+
+    private void renderFeature(Feature feature, FeaturePlacement placement) {
         BufferedImage image = map.getImage();
         Graphics2D g2d = image.createGraphics();
-        int x = feature.getLocation().x;
-        int y = feature.getLocation().y;
+        int x = placement.getLocation().x;
+        int y = placement.getLocation().y;
         g2d.drawImage(feature.getIcon(), null, x, y);
         g2d.setPaint(determineLabelColor(new Color(image.getRGB(x, y))));
-        String label = feature.getLabel();
-        int featureHeight = feature.getSize(); // size of feature in pixels
+        String label = placement.getLabel();
+        int featureHeight = 24; // size of feature in pixels
         int fontSize = getScaledFontSize(featureHeight);
-        drawLabel(label, g2d, fontSize, x - feature.getSize()/3, y - ppp);
+        if (placement.isShowLabel()) {
+            drawLabel(label, g2d, fontSize, x - feature.getSize()/3, y - ppp);
+        }
     }
 
 
@@ -62,11 +82,31 @@ public class Renderer {
                 g2d.setPaint(region.getRegionType().getColor());
             }
         }
-        g2d.setPaint(determineLabelColor(region.getRegionType().getColor()));
-        String label = region.getLabel();
-        int fontSizePixels = (int) (map.getHeight() * 0.06); // 5% of map height as size of font in pixels for region label
-        int fontSize = getScaledFontSize(fontSizePixels);
-        drawLabel(label, g2d, fontSize, startX + (region.getWidth() / 2) - (fontSize), startY + (region.getHeight())/2);
+        if (featurePlacements.containsKey(region.getLabel())) {
+            renderContainedFeatures(region);
+        }
+        if (region.isShowLabel()) {
+            g2d.setPaint(determineLabelColor(region.getRegionType().getColor()));
+            String label = region.getLabel();
+            int fontSizePixels = (int) (map.getHeight() * 0.06); // 5% of map height as size of font in pixels for region label
+            int fontSize = getScaledFontSize(fontSizePixels);
+            drawLabel(label, g2d, fontSize, startX + (region.getWidth() / 2) - (fontSize), startY + (region.getHeight())/2);
+        }
+    }
+
+    private void renderContainedFeatures(Region region) {
+        java.util.Map<String, ArrayList<FeaturePlacement>> placements =featurePlacements.get(region.getLabel());
+        Point regionCorner = region.getCorner();
+        for (java.util.Map.Entry<String, ArrayList<FeaturePlacement>> entry: placements.entrySet()) {
+            String featureName = entry.getKey();
+            Feature feature = features.get(featureName);
+            for (FeaturePlacement placement: entry.getValue()) {
+                Point point = placement.getLocation();
+                placement.setLocation(new Point(regionCorner.x + point.x, regionCorner.y + point.y));
+                renderFeature(feature, placement);
+            }
+        }
+
     }
 
     private void drawLabel(String label, Graphics2D g2d, int fontSize, int x, int y) {

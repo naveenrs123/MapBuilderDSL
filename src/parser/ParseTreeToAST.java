@@ -193,6 +193,8 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         String regionName = null;
         if (!onMap) {
             regionName = ctx.area().quoted_text().QUOTED_TEXT().getText();
+        } else {
+            regionName = "map";
         }
         boolean displayLabels = true;
         if (ctx.boolean_antlr_reg() != null && !ctx.isEmpty()) {
