@@ -336,11 +336,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitMath_if(Math_ifContext ctx) {
-        return super.visitMath_if(ctx);
-    }
-
-    @Override
     public Node visitQuoted_text_func(Quoted_text_funcContext ctx) {
         return super.visitQuoted_text_func(ctx);
     }
@@ -358,11 +353,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     @Override
     public Node visitComparison_expressions(Comparison_expressionsContext ctx) {
         return super.visitComparison_expressions(ctx);
-    }
-
-    @Override
-    public Node visitMath_expression(Math_expressionContext ctx) {
-        return super.visitMath_expression(ctx);
     }
 
     @Override
@@ -405,10 +395,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         return super.visitQuote_comparison_op(ctx);
     }
 
-    @Override
-    public Node visitArea(AreaContext ctx) {
-        return super.visitArea(ctx);
-    }
 
     @Override
     public Node visitBoolean_antlr_expression(Boolean_antlr_expressionContext ctx) {
@@ -477,15 +463,11 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     @Override
     public Node visitBoolean_antlr_func(Boolean_antlr_funcContext ctx) {
         throw new UnsupportedOperationException("This method is not used.");
-
-    @Override
-    public Node visitArea(MapParser.AreaContext ctx) {
-        return null;
     }
 
     @Override
-    public Node visitXytuple(MapParser.XytupleContext ctx) {
-        return null;
+    public Node visitArea(MapParser.AreaContext ctx) {
+        return super.visitArea(ctx);
     }
 
     @Override
