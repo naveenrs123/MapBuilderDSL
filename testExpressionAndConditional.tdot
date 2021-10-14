@@ -3,7 +3,7 @@ CREATE MAP {The Hot Desert} WITH DIMENSIONS [5,5] WITH COLOR #00FF80;
 #end map
 
 #start definitions
-DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1
+DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1;
 DEFINE FUNCTION makeWaves (x_start, x_stop):
 	START LOOP loop1, X FROM x_start TO x_stop INCREMENT BY 1:
 	    $IF #math compare X > Y:
