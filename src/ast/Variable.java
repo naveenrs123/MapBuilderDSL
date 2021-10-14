@@ -1,6 +1,10 @@
 package ast;
 
-public class Variable<Y> extends Node {
+/**
+ *
+ * @param <Y> Represents type of the value in the variable.
+ */
+public class Variable<Y> extends Statement {
 
     private String name;
     private Y value;
@@ -17,6 +21,10 @@ public class Variable<Y> extends Node {
 
     public Y getValue() {
         return value;
+    }
+
+    public String getValueType() {
+       return this.value.getClass().getSimpleName();
     }
 
     @Override

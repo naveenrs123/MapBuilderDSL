@@ -7,7 +7,7 @@ DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1;
 DEFINE FUNCTION makeWaves (x_start, x_stop):
 	START LOOP loop1, X FROM x_start TO x_stop INCREMENT BY 1:
 	    $IF #math compare X > Y:
-		    PLACE FEATURE wave WITH NAME {Blank} WITH LOCATION [X, 2] ON map
+		    PLACE FEATURE wave WITH NAME {Blank} WITH LOCATION [X, 2] ON map;
 		$ELSE:
 		    %assign X = #math compare 5 != 5;
 		    %assign Y = #text compare {yes} == {yes};
