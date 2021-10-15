@@ -3,7 +3,7 @@ package model;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Map {
+public class WorldMap {
 
     public static final Integer PIXELS_PER_POINT = 4;
     private Integer height;
@@ -13,7 +13,7 @@ public class Map {
     private String title;
 
 
-    public Map(Integer height, Integer width, Color color, String title) {
+    public WorldMap(Integer height, Integer width, Color color, String title) {
         this.title = title;
         this.color = color;
         this.height = height * PIXELS_PER_POINT;

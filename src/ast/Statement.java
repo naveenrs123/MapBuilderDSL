@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Statement extends Node {
+public class Statement extends Node {
 
     private String functionName;
     private List<String> paramNames = new ArrayList<>();
@@ -58,5 +58,10 @@ public abstract class Statement extends Node {
 
     public void setEvaluate(boolean evaluate) {
         this.evaluate = evaluate;
+    }
+
+    @Override
+    public <T> T accept(MapVisitor<T> v) {
+        return null;
     }
 }

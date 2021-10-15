@@ -29,7 +29,7 @@ public class PlaceFeature extends Statement {
         return featureName;
     }
 
-    public XYTuple getLocation() { return location; }
+    public XYTupleWithVariables getLocation() { return location; }
 
     public boolean isOnMap() {
         return onMap;

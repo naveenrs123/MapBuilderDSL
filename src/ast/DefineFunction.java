@@ -3,15 +3,15 @@ package ast;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Function extends Node {
+public class DefineFunction extends Def {
 
     private final String functionName;
     private final ArrayList<String> paramNames;
     private ArrayList<Statement> statements;
 
-    public Function(String functionName,
-                    ArrayList<String> paramNames,
-                    ArrayList<Statement> statements) {
+    public DefineFunction(String functionName,
+                          ArrayList<String> paramNames,
+                          ArrayList<Statement> statements) {
         this.functionName = functionName;
         this.paramNames = paramNames;
         this.statements = statements;
@@ -38,7 +38,7 @@ public class Function extends Node {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Function function = (Function) o;
+        DefineFunction function = (DefineFunction) o;
         return functionName.equals(function.functionName) && Objects.equals(paramNames, function.paramNames);
     }
 

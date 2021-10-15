@@ -2,26 +2,26 @@ package ast;
 
 import java.util.List;
 
-public class Conditional extends Statement {
+public class Conditional extends NonTerminalStatement {
 
-    private List<Statement> ifStatements;
-    private List<Statement> elseStatements;
     private Comparison<?, ?> condition;
+    private int pivotIndex;
 
-    public Conditional(List<Statement> ifStatements,
-                       List<Statement> elseStatements,
-                       Comparison<?, ?> condition) {
-        this.ifStatements = ifStatements;
-        this.elseStatements = elseStatements;
+    public Conditional(Comparison<?, ?> condition,
+                       List<Statement> statements,
+                       int pivotIndex) {
+        super(statements);
         this.condition = condition;
+        this.pivotIndex = pivotIndex;
+        statements.subList(0, pivotIndex);
     }
 
     public List<Statement> getIfStatements() {
-        return ifStatements;
+        return statements.subList(0, pivotIndex);
     }
 
     public List<Statement> getElseStatements() {
-        return elseStatements;
+        return statements.subList(pivotIndex, statements.size());
     }
 
     public Comparison<?, ?> getCondition() {

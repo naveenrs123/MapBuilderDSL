@@ -17,7 +17,8 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         //MapLexer lexer = new MapLexer(CharStreams.fromFileName("testExpressionAndConditional.tdot"));
-        MapLexer lexer = new MapLexer(CharStreams.fromFileName("testRendering.tdot"));
+        MapLexer lexer = new MapLexer(CharStreams.fromFileName("example2.tdot"));
+        //MapLexer lexer = new MapLexer(CharStreams.fromFileName("testRendering.tdot"));
         for (Token token : lexer.getAllTokens()) {
             System.out.println(token);
         }
@@ -30,7 +31,7 @@ public class Main {
         Program parsedProgram = visitor.visitProgram(parser.program());
         MapEvaluator<Void> evaluator = new MapEvaluator<>();
         parsedProgram.accept(evaluator);
-        Renderer renderer = new Renderer(MapEvaluator.map, MapEvaluator.features, MapEvaluator.regions, MapEvaluator.featurePlacements);
+        Renderer renderer = new Renderer(MapEvaluator.map, MapEvaluator.features, MapEvaluator.regions, MapEvaluator.placements);
         System.out.println("Done parsing");
 
         JFrame frame = new JFrame();

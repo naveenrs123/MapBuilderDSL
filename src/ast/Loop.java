@@ -1,18 +1,21 @@
 package ast;
 
+import helpers.ASTHelpers;
 import java.util.List;
 import java.util.Objects;
 
-public class Loop extends Statement {
+public class Loop extends NonTerminalStatement {
 
     private final String name;
     private final String variable;
     private final String start;
+    private int start_int;
+    private int stop_int;
     private final String stop;
     private final int counter;
-    private final List<Statement> statements;
 
     public Loop(String name, String variable, String start, String stop, int counter, List<Statement> statements) {
+        super(statements);
         this.name = name;
         this.variable = variable;
         this.start = start;
@@ -41,8 +44,30 @@ public class Loop extends Statement {
         return counter;
     }
 
-    public List<Statement> getStatements() {
-        return statements;
+    public int getStart_int() {
+        return start_int;
+    }
+
+    public void setStart_int(int start_int) {
+        this.start_int = start_int;
+    }
+
+    public int getStop_int() {
+        return stop_int;
+    }
+
+    public void setStop_int(int stop_int) {
+        this.stop_int = stop_int;
+    }
+
+    private void handleStartAndStop(String start, String stop) {
+        if (ASTHelpers.isInteger(start)) {
+            this.start_int = Integer.parseInt(start);
+        }
+
+        if (ASTHelpers.isInteger(stop)) {
+            this.stop_int = Integer.parseInt(stop);
+        }
     }
 
     @Override
