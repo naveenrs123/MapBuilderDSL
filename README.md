@@ -23,21 +23,21 @@ The language is broken down into three main regions, **Map**, **Definitions** an
 ```
 #start map
 
-< - insert statements here ->
+<- INSERT STATEMENTS HERE ->
 
 #end map
 
 
 #start definitions
 
-< - insert statements here ->
+<- INSERT STATEMENTS HERE ->
 
 #end definitions
 
 
 #start place and call
 
-< - insert statements here ->
+<- INSERT STATEMENTS HERE ->
 
 #end place and call
 ```
@@ -46,14 +46,31 @@ The language is broken down into three main regions, **Map**, **Definitions** an
 This section contains only one line.
 
 #### CREATE MAP
-**Syntax:**
-```
-CREATE MAP <quoted_text> WITH DIMENSIONS <xytuple> WITH COLOR <rgb>;
-```
+**Syntax:** | **Example:**
+------------ | -------------
+`CREATE MAP <quoted_text> WITH DIMENSIONS <xytuple> WITH COLOR <rgb>;` | `CREATE MAP {World Map} WITH DIMENSIONS [5,7] WITH COLOR #238F9D;`
+
+
 **Example:**
-```
-CREATE MAP {World Map} WITH DIMENSIONS [5,7] WITH COLOR #238F9D;
-```
-**Details:** Creates a map image with the width and height values specified in `<xytuple>`, colours it with the color `<rgb>`, and gives the map a label given by `<quoted_text>`.
+
+**Details:** Creates a map image with the width and height values specified in `<xytuple>`, colours it with the color `<rgb>`, and gives the map a label given by `<quoted_text>`. This map will be rendered as a `.png` file.
 
 ### Definitions Section
+
+#### DEFINE FEATURE
+**Syntax:** | **Example:**
+------------ | -------------
+ `DEFINE FEATURE <text> WITH ICON <quoted_text> WITH SIZE <num>;` | `DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1;`
+ 
+ **Details:** Defines a **Feature**, which is like a landmark, that can later be placed in the map. The feature type is identified by `<text>`, the icon to use is identified by `<quoted_text>` and is one of several provided icons that the user can choose from, and the size is given by `<num>`. 
+
+#### FUNCTION
+**Syntax:**
+```
+DEFINE FUNCTION <text> (... <text>):
+...
+  <- INSERT STATEMENTS HERE ->
+...  
+END FUNCTION;
+```
+ **Details:** Functions allow users to call repetitive sections of code multiple times without duplication. The function's name is given by `<text>` and any parameters that the function takes will be given by `... <text>`, which represents a list of parameter names. Functions can have **0 or more parameters** and multiple parameters must be separated by a comma (`,`).
