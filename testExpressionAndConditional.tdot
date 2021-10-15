@@ -3,7 +3,7 @@ CREATE MAP {The Hot Desert} WITH DIMENSIONS [100,100] WITH COLOR #00FF80;
 #end map
 
 #start definitions
-DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1;
+DEFINE FEATURE wave WITH ICON {wave} WITH SIZE SMALL;
 DEFINE FUNCTION makeWaves (x_start, x_stop):
     PLACE REGION water WITH NAME {Chonky Ocean} WITH LOCATION [0,0] WITH DIMENSIONS [50,50];
 	START LOOP loop1, X FROM x_start TO x_stop INCREMENT BY 10:
@@ -22,7 +22,7 @@ DEFINE FUNCTION makeWaves (x_start, x_stop):
         $END IF;
 	END LOOP loop1;
 END FUNCTION;
-DEFINE FEATURE mountain WITH ICON {mountain} WITH SIZE 1;
+DEFINE FEATURE mountain WITH ICON {mountain} WITH SIZE SMALL;
 #end definitions
 
 #start place and call

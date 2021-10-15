@@ -3,7 +3,7 @@ CREATE MAP {The Hot Desert} WITH DIMENSIONS [5,5] WITH COLOR #00FF80;
 #end map
 
 #start definitions
-DEFINE FEATURE mountain WITH ICON {mountain} WITH SIZE 1
+DEFINE FEATURE mountain WITH ICON {mountain} WITH SIZE SMALL
 #end definitions
 
 #start place and call
