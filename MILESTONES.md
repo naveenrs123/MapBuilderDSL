@@ -16,7 +16,7 @@ The updated status of the tasks for the project implementation is outlined in th
 | Validator           	| In Progress  	|    Saturday the 16th          |
 | Renderer            	| In Progress 	|    Saturday the 16th          |
 
-With the majority of the tasks being complete, the project team aims to finalize the rendering and the validation part by Saturday, October 16th, to allow time for the final user study and possible fixtures to enhance the project before the final submission.
+The deadlines set in Milestone 4 has been delayed due to augmented complexity of the project. With the majority of the tasks being complete, the project team aims to finalize the rendering and the validation part by Saturday, October 16th, to allow time for the final user study and possible fixtures to enhance the project before the final submission.
 
 During this week's team meeting, the TA has indicated that it may be favorable for the project to be scoped down. The team has agreed and concluded that math and advanced comparisons were not significant, and therefore removed the mentioned functionalities to better scope the project.
 
