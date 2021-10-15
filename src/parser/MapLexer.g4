@@ -62,10 +62,6 @@ mode SIZE_MODE;
 SIZE: ('SMALL' | 'MEDIUM' | 'LARGE') -> mode(DEFAULT_MODE);
 WS_SIZE: [\r\n\t ]+ -> channel(HIDDEN);
 
-mode NUM_MODE;
-NUM: [0-9]+ -> mode(DEFAULT_MODE);
-WS_NUM: [\r\n\t ]+ -> channel(HIDDEN);
-
 mode TUPLE_MODE;
 WS_TUPLE: [\r\n\t ]+ -> channel(HIDDEN);
 OPENING_BRACKET: '[';
