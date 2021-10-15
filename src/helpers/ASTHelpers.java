@@ -1,4 +1,4 @@
-package Helpers;
+package helpers;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 

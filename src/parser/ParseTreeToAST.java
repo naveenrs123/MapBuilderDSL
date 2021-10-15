@@ -1,6 +1,6 @@
 package parser;
 
-import Helpers.ASTHelpers;
+import helpers.ASTHelpers;
 import ast.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
