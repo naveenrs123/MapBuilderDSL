@@ -4,6 +4,29 @@ for the milestones that's fine too. Make sure that your TA has had a chance to
 sign off on your milestones each week (before the deadline); typically you
 should discuss your material with them before finalizing it here._
 
+# Milestone 5
+## Status of Implementation
+The updated status of the tasks for the project implementation is outlined in the following chart:
+| Task                	| Status      	| Deadline (Subject to Change) 	|
+|---------------------	|-------------	|------------------------------	|
+| Lexer               	| Complete    	|        n/a                   	|
+| Parser              	| Complete  	|        n/a                  	|
+| AST visitor template 	| Complete   	|        n/a                	|
+| Complete AST        	| Complete     	|        n/a                	|
+| Validator           	| In Progress  	|    Saturday the 16th          |
+| Renderer            	| In Progress 	|    Saturday the 16th          |
+
+The deadlines set in Milestone 4 has been delayed due to augmented complexity of the project. With the majority of the tasks being complete, the project team aims to finalize the rendering and the validation part by Saturday, October 16th, to allow time for the final user study and possible fixtures to enhance the project before the final submission.
+
+During this week's team meeting, the TA has indicated that it may be favorable for the project to be scoped down. The team has agreed and concluded that math and advanced comparisons were not significant, and therefore removed the mentioned functionalities to better scope the project.
+
+## Status of Final User Study
+The final user study will take place via Zoom on October 16. With the help of two participants, the project team hopes to ensure that the specified functionalities of the DSL have been satisfied, and to acquire feedback that will be taken into consideration before the final submission of the project.
+Notes from the user study will be documented in the following Google Docs: https://docs.google.com/document/d/1o7PjKRNzYbNWMF9wXDnhdlJVTqqWI2muS-budyjnWQs/edit?usp=sharing. The notes will be updated and finalized once the user study has been completed.
+
+## Future Plans
+For the remaining days before the final submission, the project team will continue to work on the completion of the remaining tasks, as well as a video that explains and demonstrates the DSL. Through consistent communication and strong teamwork, the project team plans to achieve the project goals that have been previously set with optimal quality.
+
 # Milestone 4
 
 ## Status of Implementation / Planned Timeline
@@ -18,7 +41,7 @@ Here is a chart outlining the general status of our language's implementation an
 | Validator           	| Todo        	| Wednesday the 14th            	|
 | Renderer            	| In progress 	| Wednesday the 14th            	|
 
-Our parser along with a a visitor template to traverser to parse tree (which will be used to test the parser and to create the AST) are currently being worked on and should be completed very soon. Over the long weekend we will work to implement everything needed to generate our AST. We will then start working on the validator to have it ready for the final user study. We have one team member tacking the lead for each of these sections and they are getting help from other team members as it needed. In parallel to the completion of the parser/AST/validator we have one team member working on our map renderer (evaluator). They are making good progress and it should be simple to add their work into the AST one it is complete.
+Our parser along with a visitor template to traverser to parse tree (which will be used to test the parser and to create the AST) are currently being worked on and should be completed very soon. Over the long weekend we will work to implement everything needed to generate our AST. We will then start working on the validator to have it ready for the final user study. We have one team member tacking the lead for each of these sections and they are getting help from other team members as it needed. In parallel to the completion of the parser/AST/validator we have one team member working on our map renderer (evaluator). They are making good progress and it should be simple to add their work into the AST one it is complete.
 
 We plan to have the language complete by wednesday. This will give us all a chance to explore and test the language before our final user study on Thursday.
 
