@@ -28,9 +28,6 @@ public class Main {
         MapParser parser = new MapParser(tokens);
         ParseTreeToAST visitor = new ParseTreeToAST();
         Program parsedProgram = visitor.visitProgram(parser.program());
-        for (String error : visitor.errors) {
-            System.out.println(error);
-        }
         MapEvaluator<Void> evaluator = new MapEvaluator<>();
         parsedProgram.accept(evaluator);
         Renderer renderer = new Renderer(MapEvaluator.map, MapEvaluator.features, MapEvaluator.regions, MapEvaluator.featurePlacements);

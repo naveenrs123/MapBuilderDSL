@@ -1,25 +1,23 @@
 package ast;
 
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class FunctionCall extends Statement {
 
     private final String functionName;
-    private final ArrayList<Variable<?>> parameters;
+    private ArrayList<String> parameterValueStrings;
 
-    public FunctionCall(String functionName, ArrayList<Variable<?>> parameters) {
+    public FunctionCall(String functionName, ArrayList<String> parameterValueStrings) {
         this.functionName = functionName;
-        this.parameters = parameters;
+        this.parameterValueStrings = parameterValueStrings;
     }
 
     public String getFunctionName() {
         return functionName;
     }
 
-    public ArrayList<Variable<?>> getParameters() {
-        return parameters;
+    public ArrayList<String> getParameterValueStrings() {
+        return parameterValueStrings;
     }
 
     @Override

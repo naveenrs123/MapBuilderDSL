@@ -16,32 +16,21 @@ import static parser.MapParser.*;
 
 public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
-    public ArrayList<String> errors = new ArrayList<>();
-
-    private boolean badContext(ParserRuleContext ctx) {
-        return (ctx == null || ctx.isEmpty() || ctx.exception != null);
-    }
-
     //region AST Visit Methods
     @Override
     public Program visitProgram(ProgramContext ctx) {
-        Map map;
-        PlaceAndCall placeAndCall = null;
+        Map map = visitMap(ctx.map());
 
-        if (badContext(ctx.map())) {
-            errors.add("ERROR: Missing #start map.");
-        } else {
-            map = visitMap(ctx.map());
-            if (!badContext(ctx.def())) {
-                definitions(ctx.def());
-            }
-
-            if (!badContext(ctx.place_and_call())) {
-                placeAndCall = visitPlace_and_call(ctx.place_and_call());
-            }
-            return new Program(map, placeAndCall);
+        if (canVisit(ctx.def())) {
+            definitions(ctx.def());
         }
-        return null;
+
+        PlaceAndCall placeAndCall = null;
+        if (canVisit(ctx.place_and_call())) {
+            placeAndCall = visitPlace_and_call(ctx.place_and_call());
+        }
+
+        return new Program(map, placeAndCall);
     }
 
     @Override
@@ -60,13 +49,8 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public PlaceAndCall visitPlace_and_call(Place_and_callContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
         ArrayList<Statement> statements = new ArrayList<>();
-
-        for (Place_statementContext placeStatementCtx
-                : ctx.place_statement()) {
+        for (Place_statementContext placeStatementCtx : ctx.place_statement()) {
             Statement statement = visitPlace_statement(placeStatementCtx);
             if (statement != null) {
                 statements.add(statement);
@@ -77,11 +61,11 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Statement visitPlace_statement(Place_statementContext ctx) {
-        if (ctx.place_feature() != null) {
+        if (canVisit(ctx.place_feature())) {
             return visitPlace_feature(ctx.place_feature());
-        } else if (ctx.place_region() != null) {
+        } else if (canVisit(ctx.place_region())) {
             return visitPlace_region(ctx.place_region());
-        } else if (ctx.function_call() != null) {
+        } else if (canVisit(ctx.function_call())) {
             return visitFunction_call(ctx.function_call());
         }
         return null;
@@ -107,9 +91,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Loop visitLoop(LoopContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
         Loop_startContext loopStartCtx = ctx.loop_start();
         String name = loopStartCtx.FUNCTION_STATEMENT_TEXT_TEXT(0).getText();
         String variable = loopStartCtx.FUNCTION_STATEMENT_TEXT_TEXT(1).getText();
@@ -120,8 +101,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
             counter = -counter;
         }
         List<Statement> statements = new ArrayList<>();
-        for (Function_statementContext functionStatementCtx
-                : ctx.function_statement()) {
+        for (Function_statementContext functionStatementCtx : ctx.function_statement()) {
             Statement statement = visitFunction_statement(functionStatementCtx);
             if (statement != null) {
                 statements.add(statement);
@@ -132,43 +112,35 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Conditional visitConditional(ConditionalContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
+        Comparison<?, ?> condition = visitIf_start(ctx.if_start());
+        List<Statement> ifStatements = new ArrayList<>();
+        List<Statement> elseStatements = new ArrayList<>();
 
-        if (badContext(ctx.if_start())) {
-            errors.add("ERROR: Ill-formed IF");
-            return null;
-        } else {
-            Comparison<?, ?> condition = visitIf_start(ctx.if_start());
-            List<Statement> ifStatements = new ArrayList<>();
-            List<Statement> elseStatements = new ArrayList<>();
-            boolean inElse = false;
-
-            for (int i = 0; i < ctx.children.size(); i++) {
-                ParseTree child = ctx.getChild(i);
-                if (child instanceof Else_startContext) {
-                    inElse = true;
-                } else if (child instanceof Function_statementContext context) {
-                    Statement statement = visitFunction_statement(context);
-                    if (statement != null) {
-                        if (inElse) {
-                            elseStatements.add(statement);
-                        } else {
-                            ifStatements.add(statement);
-                        }
+        boolean inElse = false;
+        for (int i = 0; i < ctx.children.size(); i++) {
+            ParseTree child = ctx.getChild(i);
+            if (child instanceof Else_startContext) {
+                inElse = true;
+            } else if (child instanceof Function_statementContext context) {
+                Statement statement = visitFunction_statement(context);
+                if (statement != null) {
+                    if (inElse) {
+                        elseStatements.add(statement);
+                    } else {
+                        ifStatements.add(statement);
                     }
                 }
             }
-            return new Conditional(ifStatements, elseStatements, condition);
         }
+
+        return new Conditional(ifStatements, elseStatements, condition);
     }
 
     @Override
     public Comparison<?, ?> visitIf_start(If_startContext ctx) {
-        if (!badContext(ctx.math_compare_if())) {
+        if (canVisit(ctx.math_compare_if())) {
             return visitMath_compare_if(ctx.math_compare_if());
-        } else if (!badContext(ctx.quote_compare_if())) {
+        } else if (canVisit(ctx.quote_compare_if())) {
             return visitQuote_compare_if(ctx.quote_compare_if());
         }
         return null;
@@ -176,15 +148,15 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public Statement visitFunction_statement(Function_statementContext ctx) {
-        if (ctx.loop() != null) {
+        if (canVisit(ctx.loop())) {
             return visitLoop(ctx.loop());
-        } else if (ctx.assignment() != null) {
+        } else if (canVisit(ctx.assignment())) {
             return visitAssignment(ctx.assignment());
-        } else if (ctx.conditional() != null) {
+        } else if (canVisit(ctx.conditional())) {
             return visitConditional(ctx.conditional());
-        } else if (ctx.place_feature_from_func() != null) {
+        } else if (canVisit(ctx.place_feature_from_func())) {
             return visitPlace_feature_from_func(ctx.place_feature_from_func());
-        } else if (ctx.place_region_from_func() != null) {
+        } else if (canVisit(ctx.place_region_from_func())) {
             return visitPlace_region_from_func(ctx.place_region_from_func());
         }
         return null;
@@ -192,9 +164,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public PlaceRegion visitPlace_region(Place_regionContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
         String regionType = ctx.REGION().getText();
         String regionName = ctx.quoted_text().QUOTED_TEXT().getText();
         XYTupleWithVariables location = visitXytuple(ctx.xytuple(0));
@@ -205,15 +174,11 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
                 displayLabels = false;
             }
         }
-
         return new PlaceRegion(regionType, regionName, location, dimensions, displayLabels);
     }
 
     @Override
     public DefineFeature visitDefine_feature(Define_featureContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
         String featureType = ctx.TEXT().getText();
         String icon = ctx.quoted_text().QUOTED_TEXT().getText();
         int size = Integer.parseInt(ctx.NUM().getText());
@@ -222,9 +187,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public PlaceFeature visitPlace_feature(Place_featureContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
         String featureType = ctx.TEXT().getText();
         String featureName = ctx.quoted_text().QUOTED_TEXT().getText();
         XYTupleWithVariables location = visitXytuple(ctx.xytuple());
@@ -241,39 +203,16 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
                 displayLabels = false;
             }
         }
-
         return new PlaceFeature(featureType, featureName, location, onMap, regionName, displayLabels);
     }
 
     @Override
     public FunctionCall visitFunction_call(Function_callContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
         ArrayList<String> paramValueStrings = new ArrayList<>();
         List<TerminalNode> textList = ctx.TEXT();
         String functionName = textList.get(0).getText();
         ASTHelpers.handleParamList(paramValueStrings, textList);
-
-        String[] paramNames = Program.retrieveParameterListForFunction(functionName);
-
-        ArrayList<Variable<?>> parameters = null;
-
-        if (paramNames != null) {
-            parameters = new ArrayList<>();
-            for (int i = 0; i < paramValueStrings.size(); i++) {
-                try {
-                    Integer paramIntValue = Integer.parseInt(paramValueStrings.get(i));
-                    Variable<Integer> param = new Variable<>(paramNames[i], paramIntValue);
-                    parameters.add(param);
-                } catch (NumberFormatException e) {
-                    Variable<String> param = new Variable<>(paramNames[i], paramValueStrings.get(i));
-                    parameters.add(param);
-                }
-            }
-        }
-
-        return new FunctionCall(functionName, parameters);
+        return new FunctionCall(functionName, paramValueStrings);
     }
 
     @Override
@@ -284,9 +223,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     @Override
     public PlaceFeature visitPlace_feature_from_func(Place_feature_from_funcContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
         String featureType = ctx.FUNCTION_STATEMENT_TEXT_TEXT().getText();
         String featureName = ctx.quoted_text_func().FROM_FUNC_QUOTED_TEXT().getText();
         XYTupleWithVariables location = visitXytuple_func(ctx.xytuple_func());
@@ -301,15 +237,11 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
                 displayLabels = false;
             }
         }
-
         return new PlaceFeature(featureType, featureName, location, onMap, regionName, displayLabels);
     }
 
     @Override
     public PlaceRegion visitPlace_region_from_func(Place_region_from_funcContext ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            return null;
-        }
         String regionType = ctx.REGION_FROM_FUNC().getText();
         String regionName = ctx.quoted_text_func().FROM_FUNC_QUOTED_TEXT().getText();
         XYTupleWithVariables location = visitXytuple_func(ctx.xytuple_func(0));
@@ -320,7 +252,6 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
                 displayLabels = false;
             }
         }
-
         return new PlaceRegion(regionType, regionName, location, dimensions, displayLabels);
     }
 
@@ -379,6 +310,10 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     //endregion
 
     //region Helpers
+    private boolean canVisit(ParserRuleContext ctx) {
+        return ctx != null && ctx.isEmpty();
+    }
+
     private void definitions(DefContext ctx) {
         if (ctx == null || ctx.isEmpty()) {
             return;
@@ -400,13 +335,13 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     private Variable<?> handleExpressionForVariable(ExpressionContext ctx, String variableName) {
-        if (ctx.quote_compare() != null && !ctx.quote_compare().isEmpty()) {
+        if (canVisit(ctx.quote_compare())) {
             return new Variable<>(variableName, visitQuote_compare(ctx.quote_compare()));
-        } else if (ctx.math_compare() != null && !ctx.math_compare().isEmpty()) {
+        } else if (canVisit(ctx.math_compare())) {
             return new Variable<>(variableName, visitMath_compare(ctx.math_compare()));
-        } else if (ctx.quoted_text_for_var() != null && !ctx.quoted_text_for_var().isEmpty()) {
+        } else if (canVisit(ctx.quoted_text_for_var())) {
             return new Variable<>(variableName, ctx.quoted_text_for_var().EXPRESSION_QUOTED_TEXT_FOR_VAR().getText());
-        } else if (ctx.boolean_antlr_expression() != null && !ctx.boolean_antlr_expression().isEmpty()) {
+        } else if (canVisit(ctx.boolean_antlr_expression())) {
             return new Variable<>(variableName, handleBooleanExpression(ctx.boolean_antlr_expression()));
         } else if (ctx.EXPRESSION_TEXT() != null) {
             String valText = ctx.EXPRESSION_TEXT().getText();

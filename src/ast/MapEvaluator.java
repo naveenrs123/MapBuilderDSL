@@ -145,7 +145,7 @@ public class MapEvaluator<T> implements MapVisitor<T> {
     @Override
     public T visit(FunctionCall p) {
         String functionName = p.getFunctionName();
-        ArrayList<Variable<?>> values = p.getParameters();
+        ArrayList<String> paramValueStrings = p.getParameterValueStrings();
         Function function = functionDefs.get(functionName);
         ArrayList<String> paramNames = function.getParamNames();
         for (Statement statement: function.getStatements()) {
@@ -155,5 +155,23 @@ public class MapEvaluator<T> implements MapVisitor<T> {
         }
         function.accept(this);
         return null;
+
+        /* // REFERENCE FOR EVALUATING PARAMS, NEEDS REWORKING.
+
+        if (paramNames != null) {
+            parameters = new ArrayList<>();
+            for (int i = 0; i < paramValueStrings.size(); i++) {
+                try {
+                    Integer paramIntValue = Integer.parseInt(paramValueStrings.get(i));
+                    Variable<Integer> param = new Variable<>(paramNames[i], paramIntValue);
+                    parameters.add(param);
+                } catch (NumberFormatException e) {
+                    Variable<String> param = new Variable<>(paramNames[i], paramValueStrings.get(i));
+                    parameters.add(param);
+                }
+            }
+        }
+
+        * */
     }
 }
