@@ -2,17 +2,19 @@ package model;
 
 import java.awt.*;
 
-public class FeaturePlacement {
+public class FeaturePlacement extends Placement {
 
     private String id;
     private String label;
     private Point location;
+    private String region;
     private boolean showLabel;
 
-    public FeaturePlacement(String id, String label, Point location, boolean showLabel) {
+    public FeaturePlacement(String id, String label, Point location, String region, boolean showLabel) {
         this.id = id;
         this.label = label;
         this.location = location;
+        this.region = region;
         this.showLabel = showLabel;
     }
 
@@ -46,5 +48,9 @@ public class FeaturePlacement {
 
     public void setShowLabel(boolean showLabel) {
         this.showLabel = showLabel;
+    }
+
+    public String getRegion() {
+        return region;
     }
 }

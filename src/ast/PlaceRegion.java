@@ -2,7 +2,7 @@ package ast;
 
 import java.util.Objects;
 
-public class PlaceRegion extends Statement {
+public class PlaceRegion extends TerminalStatement {
 
     private final String regionType;
     private final String regionName;

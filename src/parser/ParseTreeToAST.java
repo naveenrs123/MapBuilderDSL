@@ -7,8 +7,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -21,8 +19,10 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     public Program visitProgram(ProgramContext ctx) {
         Map map = visitMap(ctx.map());
 
+        ArrayList<Def> defs = new ArrayList<>();
+
         if (canVisit(ctx.def())) {
-            definitions(ctx.def());
+            defs = definitions(ctx.def());
         }
 
         PlaceAndCall placeAndCall = null;
@@ -30,7 +30,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
             placeAndCall = visitPlace_and_call(ctx.place_and_call());
         }
 
-        return new Program(map, placeAndCall);
+        return new Program(map, placeAndCall, defs);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     }
 
     @Override
-    public Function visitFunction(FunctionContext ctx) {
+    public DefineFunction visitFunction(FunctionContext ctx) {
         ArrayList<String> paramNames = new ArrayList<>();
         List<TerminalNode> textList = ctx.function_start().TEXT();
         String functionName = textList.get(0).getText();
@@ -86,7 +86,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
             }
         }
 
-        return new Function(functionName, paramNames, statements);
+        return new DefineFunction(functionName, paramNames, statements);
     }
 
     @Override
@@ -132,8 +132,10 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
                 }
             }
         }
+        int separationIndex = ifStatements.size();
+        ifStatements.addAll(elseStatements);
 
-        return new Conditional(ifStatements, elseStatements, condition);
+        return new Conditional(condition, ifStatements, separationIndex);
     }
 
     @Override
@@ -230,6 +232,8 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         String regionName = null;
         if (!onMap) {
             regionName = ctx.area_func().quoted_text().QUOTED_TEXT().getText();
+        } else {
+            regionName = "map";
         }
         boolean displayLabels = true;
         if (ctx.boolean_antlr_func() != null && !ctx.isEmpty()) {
@@ -311,27 +315,26 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
 
     //region Helpers
     private boolean canVisit(ParserRuleContext ctx) {
-        return ctx != null && ctx.isEmpty();
+        return ctx != null && !ctx.isEmpty();
     }
 
-    private void definitions(DefContext ctx) {
+    private ArrayList<Def> definitions(DefContext ctx) {
         if (ctx == null || ctx.isEmpty()) {
-            return;
+            return null;
         }
-        HashMap<String, Function> functionDefinitions = new HashMap<>();
-        HashSet<DefineFeature> featureDefinitions = new HashSet<>();
+        ArrayList<Def> defs = new ArrayList<>();
 
-        for (Define_featureContext defineFeatureCtx : ctx.define_feature()) {
-            featureDefinitions.add(visitDefine_feature(defineFeatureCtx));
+        for (int i = 0; i < ctx.children.size(); i++) {
+            ParseTree child = ctx.getChild(i);
+            if (child instanceof TerminalNode) {
+                continue;
+            } else if (child instanceof Define_featureContext context) {
+                defs.add(visitDefine_feature(context));
+            } else if (child instanceof FunctionContext context) {
+                defs.add(visitFunction(context));
+            }
         }
-
-        for (FunctionContext functionCtx : ctx.function()) {
-            Function function = visitFunction(functionCtx);
-            functionDefinitions.put(function.getFunctionName(), function);
-        }
-
-        Program.featureDefinitions = featureDefinitions;
-        Program.functionDefinitions = functionDefinitions;
+        return defs;
     }
 
     private Variable<?> handleExpressionForVariable(ExpressionContext ctx, String variableName) {

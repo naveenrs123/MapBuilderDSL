@@ -2,7 +2,7 @@ package ast;
 
 import java.util.Objects;
 
-public class PlaceFeature extends Statement {
+public class PlaceFeature extends TerminalStatement {
 
     private final String featureType;
     private final String featureName;
@@ -29,7 +29,7 @@ public class PlaceFeature extends Statement {
         return featureName;
     }
 
-    public XYTuple getLocation() { return location; }
+    public XYTupleWithVariables getLocation() { return location; }
 
     public boolean isOnMap() {
         return onMap;

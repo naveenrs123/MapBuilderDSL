@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -10,14 +11,20 @@ public class Program extends Node{
      */
     private final Map map;
     private final PlaceAndCall placeAndCall;
+    private final ArrayList<Def> defs;
 
-    public Program(Map map, PlaceAndCall placeAndCall) {
+    public Program(Map map, PlaceAndCall placeAndCall, ArrayList<Def> defs) {
         this.map = map;
         this.placeAndCall = placeAndCall;
+        this.defs = defs;
     }
 
     public Map getMap() {
         return map;
+    }
+
+    public ArrayList<Def> getDefs() {
+        return defs;
     }
 
     public PlaceAndCall getPlaceAndCall() {
@@ -27,19 +34,5 @@ public class Program extends Node{
     @Override
     public <T> T accept(MapVisitor<T> v) {
         return v.visit(this);
-    }
-
-    public static HashMap<String, Function> functionDefinitions = null;
-    public static HashSet<DefineFeature> featureDefinitions = null;
-
-    public static String[] retrieveParameterListForFunction(String functionName) {
-        Function func = functionDefinitions.get(functionName);
-        if (func != null) {
-            String[] params = new String[func.getParamNames().size()];
-            params = func.getParamNames().toArray(params);
-            return params;
-        } else {
-            return null;
-        }
     }
 }

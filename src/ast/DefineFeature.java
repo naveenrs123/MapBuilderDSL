@@ -2,7 +2,7 @@ package ast;
 
 import java.util.Objects;
 
-public class DefineFeature extends Statement {
+public class DefineFeature extends Def {
 
     private final String featureType;
     private final String icon;

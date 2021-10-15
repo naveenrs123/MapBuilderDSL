@@ -1,9 +1,8 @@
 package model;
 
 import java.awt.*;
-import java.util.ArrayList;
 
-public class Region {
+public class Region extends Placement {
 
     private Point corner;
     private Integer height;
@@ -18,7 +17,7 @@ public class Region {
                   RegionType regionType,
                   String label,
                   boolean showLabel) {
-        int ppp = Map.PIXELS_PER_POINT;
+        int ppp = WorldMap.PIXELS_PER_POINT;
         this.corner = new Point(corner.x * ppp, corner.y * ppp);
         this.height = height * ppp;
         this.width = width * ppp;

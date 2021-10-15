@@ -1,0 +1,23 @@
+#start map
+CREATE MAP {The Hot Desert} WITH DIMENSIONS [200,200] WITH COLOR #00FF80;
+#end map
+
+#start definitions
+DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1;
+DEFINE FEATURE mountain WITH ICON {mountain} WITH SIZE 1;
+DEFINE FUNCTION makeWavesThenMountains (x_start, x_stop):
+    PLACE REGION water WITH NAME {Chonky Ocean} WITH LOCATION [100,0] WITH DIMENSIONS [100,200];
+	START LOOP loop1, X FROM x_start TO x_stop INCREMENT BY 10:
+	    $IF #math compare X >= 100:
+		    PLACE FEATURE wave WITH NAME {Blank} WITH LOCATION [X, 100] ON map DISPLAY NAME %FALSE;
+		$ELSE:
+		    PLACE FEATURE mountain WITH NAME {Blank} WITH LOCATION [X, 100] ON map DISPLAY NAME %FALSE;
+		$END ELSE;
+        $END IF;
+	END LOOP loop1;
+END FUNCTION;
+#end definitions
+
+#start place and call
+CALL FUNCTION makeWavesThenMountains (0, 200);
+#end place and call

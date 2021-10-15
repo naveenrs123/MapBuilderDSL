@@ -1,7 +1,9 @@
 package ast;
 
-public class Comparison<X, Y> extends Node {
+public class Comparison<X, Y> extends TerminalStatement {
 
+    public static String[] STRING_OPERATORS = new String[] {"==", "!="};
+    public static String[] NUM_OPERATORS = new String[] {"==", "!=", "<", ">", ">=", "<="};
     private String first;
     private String second;
     private X firstVal = null;
@@ -63,6 +65,7 @@ public class Comparison<X, Y> extends Node {
     public String getSecondValType() {
         return this.secondVal.getClass().getSimpleName();
     }
+
 
     @Override
     public <T> T accept(MapVisitor<T> v) {

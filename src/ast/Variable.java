@@ -42,6 +42,6 @@ public class Variable<Y> extends Statement {
 
     @Override
     public <T> T accept(MapVisitor<T> v) {
-        return null;
+        return v.visit(this);
     }
 }
