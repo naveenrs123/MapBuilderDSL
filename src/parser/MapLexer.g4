@@ -23,7 +23,7 @@ FUNCTION_PARAM_END: '):' -> mode(FUNCTION_STATEMENT_MODE);
 // define feature
 DEFINE_FEATURE_START: 'DEFINE FEATURE' -> mode(TEXT_MODE);
 DEFINE_FEATURE_ICON: 'WITH ICON' -> mode(QUOTED_TEXT_MODE);
-DEFINE_FEATURE_SIZE: 'WITH SIZE' -> mode(NUM_MODE);
+DEFINE_FEATURE_SIZE: 'WITH SIZE' -> mode(SIZE_MODE);
 
 
 /** place and call */
@@ -58,10 +58,9 @@ CLOSING_QUOTE: '}' -> mode(DEFAULT_MODE);
 //mode QUOTED_TEXT_MODE_TEXT;
 //QUOTED_TEXT: [a-zA-Z0-9 ]+ -> mode(QUOTED_TEXT_MODE);
 
-
-mode NUM_MODE;
-NUM: [0-9]+ -> mode(DEFAULT_MODE);
-WS_NUM: [\r\n\t ]+ -> channel(HIDDEN);
+mode SIZE_MODE;
+SIZE: ('SMALL' | 'MEDIUM' | 'LARGE') -> mode(DEFAULT_MODE);
+WS_SIZE: [\r\n\t ]+ -> channel(HIDDEN);
 
 mode TUPLE_MODE;
 WS_TUPLE: [\r\n\t ]+ -> channel(HIDDEN);
