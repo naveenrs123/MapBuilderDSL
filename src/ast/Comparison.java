@@ -1,6 +1,6 @@
 package ast;
 
-public class Comparison<X, Y> extends TerminalStatement {
+public class Comparison<X, Y> extends Statement {
 
     public static String[] STRING_OPERATORS = new String[] {"==", "!="};
     public static String[] NUM_OPERATORS = new String[] {"==", "!=", "<", ">", ">=", "<="};

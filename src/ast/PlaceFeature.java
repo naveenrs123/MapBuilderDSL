@@ -2,7 +2,7 @@ package ast;
 
 import java.util.Objects;
 
-public class PlaceFeature extends TerminalStatement {
+public class PlaceFeature extends Statement {
 
     private final String featureType;
     private final String featureName;
