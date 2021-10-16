@@ -202,6 +202,8 @@ Used in **EXPRESSIONS**. One of:
 **Details:**
 * `<number/text>`. TYPE: `NUMBER` or `TEXT`.
 
+---
+
 ### Primitive Types
 
 **Type:** | **Details:** | **Example:**
