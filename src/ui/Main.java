@@ -17,7 +17,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         //MapLexer lexer = new MapLexer(CharStreams.fromFileName("testExpressionAndConditional.tdot"));
-        MapLexer lexer = new MapLexer(CharStreams.fromFileName("example2.tdot"));
+        MapLexer lexer = new MapLexer(CharStreams.fromFileName("example3.tdot"));
         //MapLexer lexer = new MapLexer(CharStreams.fromFileName("testRendering.tdot"));
         for (Token token : lexer.getAllTokens()) {
             System.out.println(token);

@@ -183,7 +183,7 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     public DefineFeature visitDefine_feature(Define_featureContext ctx) {
         String featureType = ctx.TEXT().getText();
         String icon = ctx.quoted_text().QUOTED_TEXT().getText();
-        int size = Integer.parseInt(ctx.NUM().getText());
+        String size = ctx.SIZE().getText();
         return new DefineFeature(featureType, icon, size);
     }
 
@@ -228,10 +228,10 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
         String featureType = ctx.FUNCTION_STATEMENT_TEXT_TEXT().getText();
         String featureName = ctx.quoted_text_func().FROM_FUNC_QUOTED_TEXT().getText();
         XYTupleWithVariables location = visitXytuple_func(ctx.xytuple_func());
-        boolean onMap = ctx.area_func().quoted_text() == null || ctx.area_func().quoted_text().isEmpty();
+        boolean onMap = ctx.area_func().quoted_text_func() == null || ctx.area_func().quoted_text_func().isEmpty();
         String regionName = null;
         if (!onMap) {
-            regionName = ctx.area_func().quoted_text().QUOTED_TEXT().getText();
+            regionName = ctx.area_func().quoted_text_func().FROM_FUNC_QUOTED_TEXT().getText();
         } else {
             regionName = "map";
         }

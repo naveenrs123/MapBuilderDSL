@@ -6,9 +6,9 @@ public class DefineFeature extends Def {
 
     private final String featureType;
     private final String icon;
-    private final int size;
+    private String size;
 
-    public DefineFeature(String featureType, String icon, int size) {
+    public DefineFeature(String featureType, String icon, String size) {
         this.featureType = featureType;
         this.icon = icon;
         this.size = size;
@@ -22,7 +22,7 @@ public class DefineFeature extends Def {
         return icon;
     }
 
-    public int getSize() {
+    public String getSize() {
         return size;
     }
 

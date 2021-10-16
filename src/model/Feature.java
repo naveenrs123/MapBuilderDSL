@@ -12,10 +12,12 @@ public class Feature implements Cloneable {
     private String iconName;
     private BufferedImage icon;
     private Point location;
-    private Integer size = 24;
+    private FeatureSize sizeCategory;
+    private int size;
 
-    public Feature(String id, String iconName, Integer size) {
-        this.size = size;
+    public Feature(String id, String iconName, FeatureSize featureSize) {
+        this.sizeCategory = featureSize;
+        this.size = featureSize.getPixels();
         this.iconName = iconName;
         this.id = id;
     }
@@ -38,7 +40,7 @@ public class Feature implements Cloneable {
     }
 
 
-    public Integer getSize() {
+    public int getSize() {
         return size;
     }
 
@@ -46,8 +48,8 @@ public class Feature implements Cloneable {
         this.location = location;
     }
 
-    public void setSize(Integer size) {
-        this.size = size;
+    public void setSize(FeatureSize size) {
+        this.sizeCategory = size;
     }
 
 
@@ -62,7 +64,7 @@ public class Feature implements Cloneable {
 
     private BufferedImage fetchIcon(String iconName) {
         try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(String.format( "%s_%dpx.png", iconName, 32));
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(String.format( "%s_%dpx.png", iconName, size));
             return ImageIO.read(inputStream);
         } catch (IOException e) {
             return null;
