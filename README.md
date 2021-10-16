@@ -158,6 +158,16 @@ Must be in **PLACE AND CALL** section or in a **FUNCTION**, **LOOP**, or **CONDI
 * `<region-name:` TYPE: `TEXT`. Name of region on which the feature will be placed. **Only used when `ON region` is present.**
 * `<display>`: TYPE: `BOOLEAN`. Decides whether to display the label specified in `<feature-name>`.
 
+#### FUNCTION CALL
+Must be in **PLACE AND CALL** section.
+**Syntax:** | **Example:**
+------------ | -------------
+`CALL FUNCTION <function-name> (<argument-list>);` | `CALL FUNCTION makeWavesThenMountains (0, 200);`
+
+**Details:** Calls a function with specified values for the parameters.
+* `<function-name>`: Type: `TEXT`. The name of the function. 
+* `<argument-list>`: Type: `NUMBER`. A list of **0 or more arguments**. If there are at least **2 arguments**, they must be separated with a comma (`,`).
+
 #### ASSIGNMENT
 Must be in a **FUNCTION**, **LOOP**, or **CONDITIONAL**.
 **Syntax:** | **Example:**
