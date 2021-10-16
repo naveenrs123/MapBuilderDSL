@@ -1,6 +1,0 @@
-#start map
-CREATE MAP {So many regions} WITH DIMENSIONS [200,200] WITH COLOR #F4D7B4;
-
-
-
-#end map
