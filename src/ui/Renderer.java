@@ -61,7 +61,7 @@ public class Renderer {
         g2d.drawImage(feature.getIcon(), null, x, y);
         g2d.setPaint(determineLabelColor(new Color(image.getRGB(x, y))));
         String label = placement.getLabel();
-        int featureHeight = 24; // size of feature in pixels
+        int featureHeight = feature.getSize(); // size of feature in pixels
         int fontSize = getScaledFontSize(featureHeight);
         if (placement.isShowLabel()) {
             drawLabel(label, g2d, fontSize, x - feature.getSize()/3, y - ppp);
@@ -88,7 +88,7 @@ public class Renderer {
         if (region.isShowLabel()) {
             g2d.setPaint(determineLabelColor(region.getRegionType().getColor()));
             String label = region.getLabel();
-            int fontSizePixels = (int) (map.getHeight() * 0.06); // 5% of map height as size of font in pixels for region label
+            int fontSizePixels = (int) (map.getHeight() * 0.06); // 7% of map height as size of font in pixels for region label
             int fontSize = getScaledFontSize(fontSizePixels);
             drawLabel(label, g2d, fontSize, startX + (region.getWidth() / 2) - (fontSize), startY + (region.getHeight())/2);
         }

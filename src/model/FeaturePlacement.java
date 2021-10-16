@@ -11,9 +11,10 @@ public class FeaturePlacement extends Placement {
     private boolean showLabel;
 
     public FeaturePlacement(String id, String label, Point location, String region, boolean showLabel) {
+        int ppp = WorldMap.PIXELS_PER_POINT;
         this.id = id;
         this.label = label;
-        this.location = location;
+        this.location = new Point(location.x * ppp, location.y * ppp);
         this.region = region;
         this.showLabel = showLabel;
     }

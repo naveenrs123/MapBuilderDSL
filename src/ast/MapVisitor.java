@@ -8,8 +8,6 @@ public interface MapVisitor<T> {
     T visit(DefineFunction p);
     T visit(Loop p);
     T visit(Conditional p);
-    T visit(Comparison<?, ?> p);
-    T visit(Assignment p);
     T visit(Variable<?> p);
     T visit(PlaceAndCall p);
     T visit(PlaceRegion p);

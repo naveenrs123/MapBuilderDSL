@@ -53,8 +53,9 @@ public class MapEvaluator<T> implements MapVisitor<T> {
     public T visit(DefineFeature p) {
         String name = p.getFeatureType();
         String icon = p.getIcon();
-        Integer size = p.getSize();
-        Feature feature = new Feature(name, icon, size);
+        String size = p.getSize();
+        FeatureSize featureSize = FeatureSize.valueOf(size.toUpperCase());
+        Feature feature = new Feature(name, icon, featureSize);
         features.put(name, feature);
         return null;
     }
@@ -126,29 +127,6 @@ public class MapEvaluator<T> implements MapVisitor<T> {
     }
 
     @Override
-    public T visit(Comparison<?, ?> p) {
-        if (p.isEvaluate()) {
-            if (p.getFirstVal() instanceof String && p.getSecondVal() instanceof String) {
-                handleStringComparison((Comparison<String, String>) p);
-            } else {
-                handleNumComparison((Comparison<Integer, Integer>) p, p.getFunctionName());
-            }
-            String functionName = p.getFunctionName();
-            Map<String, Variable<?>> variables = funCalls.get(functionName);
-            if (!p.isFirstReference()) {
-
-            }
-
-        }
-        return null;
-    }
-
-    @Override
-    public T visit(Assignment p) {
-        return null;
-    }
-
-    @Override
     public T visit(Variable<?> p) {
         if (p.isEvaluate()) {
             String funName = p.getFunctionName();
@@ -193,23 +171,26 @@ public class MapEvaluator<T> implements MapVisitor<T> {
 
     @Override
     public T visit(PlaceRegion p) {
-        XYTuple xy;
+        XYTuple xyCorner;
+        XYTuple xyDimensions;
         if (inFunctionScope(p)) {
             if (!p.isEvaluate()) {
                 return null;
             }
         }
         if (p.getFunctionName() != null) {
-            xy = handleXYTupleWithVariables(p.getLocation(), p.getFunctionName());
+            xyCorner = handleXYTupleWithVariables(p.getLocation(), p.getFunctionName());
+            xyDimensions = handleXYTupleWithVariables(p.getDimensions(), p.getFunctionName());
         } else {
-            xy = p.getLocation();
+            xyCorner = p.getLocation();
+            xyDimensions = p.getDimensions();
         }
         String regionName = p.getRegionName();
         String regionType = p.getRegionType();
         RegionType type = RegionType.valueOf(regionType.toUpperCase());
-        Point corner = new Point(xy.getX(), xy.getY());
-        int width = p.getDimensions().getX();
-        int height = p.getDimensions().getY();
+        Point corner = new Point(xyCorner.getX(), xyCorner.getY());
+        int width = xyDimensions.getX();
+        int height = xyDimensions.getY();
         Region region = new Region(corner, height, width, type, regionName, p.isDisplayLabels());
         regions.put(regionName, region);
         placements.add(region);
@@ -231,8 +212,7 @@ public class MapEvaluator<T> implements MapVisitor<T> {
         }
         String id = p.getFeatureType();
         String name = p.getFeatureName();
-        int ppp = WorldMap.PIXELS_PER_POINT;
-        Point location = new Point(xy.getX() * ppp, xy.getY() * ppp);
+        Point location = new Point(xy.getX(), xy.getY());
         String regionName = p.getRegionName();
         Feature feature = features.get(id);
         if (feature == null) {
