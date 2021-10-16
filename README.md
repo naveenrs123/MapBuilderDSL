@@ -12,6 +12,7 @@ This project is configured to work best in IntelliJ IDEA. Before running the pro
 * Right-click `MapLexer.g4` then click *Generate ANTLR Recognizer*.
 * Right-click `MapParser.g4` then click *Generate ANTLR Recognizer*.
 * Mark the `gen` folder as the generated sources root in *Project Structure* > *Modules* > *Sources*.
+* Mark the `icons` folder as Resources route, or else the icons will not be fetched when rendering a feature.
 
 Once those actions have all been completed, specify the name of the file to run in `Main.java`, making sure that it has the `.mpb` file extension. Then the program will run by running the `main` function in the class.
 
