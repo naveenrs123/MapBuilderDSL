@@ -4,7 +4,7 @@
 The aim of this project is to create a Domain Specific Language (DSL) that can be used to design and build a map of a world. The target audience for this DSL is people with an interest in RPGs, Dungeons and Dragons, fantasy writing, or other situations that involve worldbuilding and lore.
 
 ## Build and Run
-This project is configured to work best in IntelliJ IDEA. Before running the project, make sure that the following things have been completed:
+This project is configured to work best in IntelliJ IDEA using open-jdk 16. Before running the project, make sure that the following things have been completed:
 
 ### ANTLR
 * Make sure that the ANTLR .jar file is included as a dependency in *Project Structure* > *Modules* > *Dependencies*.
