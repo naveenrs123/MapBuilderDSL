@@ -59,7 +59,7 @@ END FUNCTION;
 ```
 **Details:** Functions allow repetitive code sections to be reused. They are identified by a name and can take one or more parameters.
 * `<function-name>`: Type: `TEXT`. The name of the function. 
-* `<parameter-list>`: Type: `TEXT`. A list of **0 or more parameters**. If there are at least **2 parameters**, they must be separated with a comma (`,`).
+* `<parameter-list>`: Type: `TEXT`. A list of **1 or more parameters**. If there are at least **2 parameters**, they must be separated with a comma (`,`).
  
 #### LOOP
 ```
@@ -166,7 +166,7 @@ Must be in **PLACE AND CALL** section.
 
 **Details:** Calls a function with specified values for the parameters.
 * `<function-name>`: Type: `TEXT`. The name of the function. 
-* `<argument-list>`: Type: `NUMBER`. A list of **0 or more arguments**. If there are at least **2 arguments**, they must be separated with a comma (`,`).
+* `<argument-list>`: Type: `NUMBER`. A list of **1 or more arguments**. If there are at least **2 arguments**, they must be separated with a comma (`,`).
 
 #### ASSIGNMENT
 Must be in a **FUNCTION**, **LOOP**, or **CONDITIONAL**.
