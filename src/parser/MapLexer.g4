@@ -46,6 +46,7 @@ STATEMENT_END: ';';
 
 /** other modes */
 mode TEXT_MODE;
+NUM: [0-9]+ -> mode(DEFAULT_MODE);
 TEXT: [a-zA-Z0-9_]+ -> mode(DEFAULT_MODE);
 WS_TEXT: [\r\n\t ]+ -> channel(HIDDEN);
 
