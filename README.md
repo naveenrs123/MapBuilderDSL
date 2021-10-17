@@ -17,7 +17,7 @@ This project is configured to work best in IntelliJ IDEA. Before running the pro
 * Mark the `gen` folder as the generated sources root. Contains the generated ANTLR classes and helpers.
 * Mark the `icons` folder as the resources root. Required to allow icons to be retrieved and rendered.
 
-Once those actions have all been completed, specify the name of the file to run in `Main.java`, making sure that it has the `.tdot` file extension. Then the program will run by running the `main` function in the class.
+Once those actions have all been completed, specify the name of the file to run in `Main.java`, making sure that it has the `.tdot` file extension. This can be done by modifying the file name on line 20 of `Main.java`. The program will then run by running the `main` function in the class.
 
 ## Language Design
 
@@ -118,17 +118,6 @@ Must be in **MAP** section.
 * `<dimensions>`: TYPE: `XYTUPLE`. A tuple representing the width and height of the map in that order.
 * `<color>`: TYPE: `COLOR`. An RGB color value.
 
-#### DEFINE FEATURE
-Must be in **DEFINTIONS** section.
-**Syntax:** | **Example:**
------------- | -------------
- `DEFINE FEATURE <feature-type> WITH ICON <icon> WITH SIZE <size>;` | `DEFINE FEATURE wave WITH ICON {wave} WITH SIZE SMALL;`
- 
- **Details:** Defines a **Feature**, which is like a landmark, that can be placed on a map.
-* `<feature-type>`: TYPE: `TEXT`. The feature type identifier.
-* `<icon>`: TYPE: `ICON`. One of various icons that the user can select.
-* `<size>`: TYPE: `TEXT`. One of `SMALL`, `MEDIUM` or `LARGE`.
-
 #### PLACE REGION
 Must be in **PLACE AND CALL** section or in a **FUNCTION**, **LOOP**, or **CONDITIONAL**.
 **Syntax:** | **Example:**
@@ -144,4 +133,93 @@ Must be in **PLACE AND CALL** section or in a **FUNCTION**, **LOOP**, or **CONDI
 
 **Note:** `DISPLAY LABELS <display>` is optional.
 
+#### DEFINE FEATURE
+Must be in **DEFINTIONS** section.
+**Syntax:** | **Example:**
+------------ | -------------
+ `DEFINE FEATURE <feature-type> WITH ICON <icon> WITH SIZE <size>;` | `DEFINE FEATURE wave WITH ICON {wave} WITH SIZE SMALL;`
+ 
+ **Details:** Defines a **Feature**, which is like a landmark, that can be placed on a map.
+* `<feature-type>`: TYPE: `TEXT`. The feature type identifier.
+* `<icon>`: TYPE: `ICON`. One of various icons that the user can select.
+* `<size>`: TYPE: `TEXT`. One of `SMALL`, `MEDIUM` or `LARGE`.
 
+#### PLACE FEATURE
+Must be in **PLACE AND CALL** section or in a **FUNCTION**, **LOOP**, or **CONDITIONAL**.
+**Syntax:** | **Example:**
+------------ | -------------
+`PLACE FEATURE <feature-type> WITH NAME <feature-name> WITH LOCATION <location> ON map DISPLAY LABELS <display>;` | `PLACE FEATURE wave WITH NAME {Waves} WITH LOCATION [X, 100] ON map DISPLAY NAME %FALSE;`
+`PLACE FEATURE <feature-type> WITH NAME <feature-name> WITH LOCATION <location> ON region <region-name> DISPLAY LABELS <display>;` | `PLACE FEATURE wave WITH NAME {Waves} WITH LOCATION [X, 100] ON region {Ocean} DISPLAY NAME %TRUE;`
+
+ **Details:** Creates a **Region**, which is a specific area on a **Map**.
+* `<feature-type>`: TYPE: `TEXT`. The feature type identifier.
+* `<feature-name>`: TYPE: `QUOTED_TEXT`. 
+* `<location>`: TYPE: `XYTUPLE`. A tuple representing the X, Y coordinate location of the top-left corner of the feature.
+* `<region-name:` TYPE: `TEXT`. Name of region on which the feature will be placed. **Only used when `ON region` is present.**
+* `<display>`: TYPE: `BOOLEAN`. Decides whether to display the label specified in `<feature-name>`.
+
+#### FUNCTION CALL
+Must be in **PLACE AND CALL** section.
+**Syntax:** | **Example:**
+------------ | -------------
+`CALL FUNCTION <function-name> (<argument-list>);` | `CALL FUNCTION makeWavesThenMountains (0, 200);`
+
+**Details:** Calls a function with specified values for the parameters.
+* `<function-name>`: Type: `TEXT`. The name of the function. 
+* `<argument-list>`: Type: `NUMBER`. A list of **0 or more arguments**. If there are at least **2 arguments**, they must be separated with a comma (`,`).
+
+#### ASSIGNMENT
+Must be in a **FUNCTION**, **LOOP**, or **CONDITIONAL**.
+**Syntax:** | **Example:**
+------------ | -------------
+ `%assign <variable-name> = <expression>;` | `%assign X = #math compare 5 != 5;`, `%assign var = {my text};`, `%assign var5 = 6;`
+ 
+ **Details:** Assigns an expression to a variable, which can then be referred to later.
+ * `<variable-name>`: TYPE: `TEXT`. The variable identifier. 
+ * `<expression>`: TYPE: `EXPRESSION`. The value assigned to the variable. 
+
+---
+### Expressions and Comparisons and Tuples
+
+#### EXPRESSION
+Used in **ASSIGNMENT**. One of:
+**Syntax:** | **Example:**
+------------ | -------------
+`COMPARISON` | `5 > 5`, `var_x > 4`
+`QUOTED_TEXT` | `{Hello}`
+`NUMBER` | `5`
+`TEXT` | `text_2`
+`BOOLEAN` | `%TRUE`
+
+#### COMPARISON
+Used in **EXPRESSIONS**. One of:
+**Syntax:** | **Example:**
+------------ | -------------
+`<number/text> <number-operator> <number/text>` | `5 > 5`, `var_x > 4` 
+`<quote> <quoted-text-operator> <quote>` | `{Chocolate} == {Vanilla}`
+
+**Details:**
+* `<number/text>`. TYPE: `NUMBER` or `TEXT`.
+* `<quote>.` TYPE: `QUOTED_TEXT`.
+* `<number-operator>.` ONE OF: `==`, `!=`, `>`, `<`, `>=`, `<=`.
+* `<quote-operator>`. ONE OF: `==`, `!=`.
+
+#### XYTUPLE
+**Syntax:** | **Example:**
+------------ | -------------
+`[<number/text> , <number/text>]` | `[X, 100]`, `[100, 49]`
+
+**Details:**
+* `<number/text>`. TYPE: `NUMBER` or `TEXT`.
+
+---
+
+### Primitive Types
+
+**Type:** | **Details:** | **Example:**
+------------ | ------------- | -------------
+`NUMBER` | A positive integer. | `5`
+`BOOLEAN` | One of `%TRUE` or `%FALSE` | `%TRUE`
+`TEXT` | A sequence of uppercase, lowercase, and underscore characters with no whitespace separation. | `text_2`
+`QUOTED_TEXT` | A sequence of uppercase and lowercase characters with allowed whitespace, wrapped in `{}` | `{Hello}`
+`COLOR` | `#` + a sequence of 6 hexadecimal characters. | `#FF438A`
