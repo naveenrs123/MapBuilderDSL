@@ -17,7 +17,7 @@ This project is configured to work best in IntelliJ IDEA. Before running the pro
 * Mark the `gen` folder as the generated sources root. Contains the generated ANTLR classes and helpers.
 * Mark the `icons` folder as the resources root. Required to allow icons to be retrieved and rendered.
 
-Once those actions have all been completed, specify the name of the file to run in `Main.java`, making sure that it has the `.tdot` file extension. Then the program will run by running the `main` function in the class.
+Once those actions have all been completed, specify the name of the file to run in `Main.java`, making sure that it has the `.tdot` file extension. This can be done by modifying the file name on line 20 of 'Main.java' file. The program will then run by running the `main` function in the class.
 
 ## Language Design
 
