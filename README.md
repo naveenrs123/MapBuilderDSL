@@ -125,7 +125,7 @@ Must be in **PLACE AND CALL** section or in a **FUNCTION**, **LOOP**, or **CONDI
 `PLACE REGION <region-type> WITH NAME <region-name> WITH LOCATION <location> WITH DIMENSIONS <dimensions> DISPLAY LABELS <display>;` | `PLACE REGION desert WITH NAME {Sahara} WITH LOCATION [0,100] WITH DIMENSIONS [100,100] DISPLAY NAME %TRUE;` 
  
  **Details:** Creates a **Region**, which is a specific area on a **Map**.
-* `<region-type>`: TYPE: `TEXT`. The region type identifier.
+* `<region-type>`: TYPE: `TEXT`. The region type identifier. Currently available options are: grass, desert, forest, water, snow, ocean.
 * `<region-name>`: TYPE: `QUOTED_TEXT`. 
 * `<location>`: TYPE: `XYTUPLE`. A tuple representing the X, Y coordinate location of the top-left corner of the region.
 * `<dimensions>`: TYPE: `XYTUPLE`. A tuple representing the width and height of the map in that order.
@@ -141,7 +141,7 @@ Must be in **DEFINTIONS** section.
  
  **Details:** Defines a **Feature**, which is like a landmark, that can be placed on a map.
 * `<feature-type>`: TYPE: `TEXT`. The feature type identifier.
-* `<icon>`: TYPE: `ICON`. One of various icons that the user can select.
+* `<icon>`: TYPE: `ICON`. One of various icons that the user can select. Currently available options are: castle, mountain, wave.
 * `<size>`: TYPE: `TEXT`. One of `SMALL`, `MEDIUM` or `LARGE`.
 
 #### PLACE FEATURE
