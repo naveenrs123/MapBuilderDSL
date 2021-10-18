@@ -39,6 +39,14 @@ public class FeaturePlacement extends Placement {
         return location;
     }
 
+    public Integer getHeight() {
+        return (int) location.getY();
+    }
+
+    public Integer getWidth() {
+        return (int) location.getX();
+    }
+
     public void setLocation(Point location) {
         this.location = location;
     }

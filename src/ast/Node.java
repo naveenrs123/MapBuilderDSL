@@ -1,5 +1,5 @@
 package ast;
 
 public abstract class Node {
-    abstract public <T> T accept(MapVisitor<T> v);
+    abstract public <C,T> T accept(C context, MapVisitor<C,T> v);
 }
