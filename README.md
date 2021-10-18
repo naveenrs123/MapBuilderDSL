@@ -4,7 +4,7 @@
 The aim of this project is to create a Domain Specific Language (DSL) that can be used to design and build a map of a world. The target audience for this DSL is people with an interest in RPGs, Dungeons and Dragons, fantasy writing, or other situations that involve worldbuilding and lore.
 
 ## Build and Run
-This project is configured to work best in IntelliJ IDEA. Before running the project, make sure that the following things have been completed:
+This project is configured to work best in IntelliJ IDEA using open-jdk 16. Before running the project, make sure that the following things have been completed:
 
 ### ANTLR
 * Make sure that the ANTLR .jar file is included as a dependency in *Project Structure* > *Modules* > *Dependencies*.
@@ -17,7 +17,7 @@ This project is configured to work best in IntelliJ IDEA. Before running the pro
 * Mark the `gen` folder as the generated sources root. Contains the generated ANTLR classes and helpers.
 * Mark the `icons` folder as the resources root. Required to allow icons to be retrieved and rendered.
 
-Once those actions have all been completed, specify the name of the file to run in `Main.java`, making sure that it has the `.tdot` file extension. Then the program will run by running the `main` function in the class.
+Once those actions have all been completed, specify the name of the file to run in `Main.java`, making sure that it has the `.tdot` file extension. This can be done by modifying the file name on line 20 of `Main.java`. The program will then run by running the `main` function in the class.
 
 ## Language Design
 
@@ -59,7 +59,7 @@ END FUNCTION;
 ```
 **Details:** Functions allow repetitive code sections to be reused. They are identified by a name and can take one or more parameters.
 * `<function-name>`: Type: `TEXT`. The name of the function. 
-* `<parameter-list>`: Type: `TEXT`. A list of **0 or more parameters**. If there are at least **2 parameters**, they must be separated with a comma (`,`).
+* `<parameter-list>`: Type: `TEXT`. A list of **1 or more parameters**. If there are at least **2 parameters**, they must be separated with a comma (`,`).
  
 #### LOOP
 ```
@@ -125,7 +125,7 @@ Must be in **PLACE AND CALL** section or in a **FUNCTION**, **LOOP**, or **CONDI
 `PLACE REGION <region-type> WITH NAME <region-name> WITH LOCATION <location> WITH DIMENSIONS <dimensions> DISPLAY LABELS <display>;` | `PLACE REGION desert WITH NAME {Sahara} WITH LOCATION [0,100] WITH DIMENSIONS [100,100] DISPLAY NAME %TRUE;` 
  
  **Details:** Creates a **Region**, which is a specific area on a **Map**.
-* `<region-type>`: TYPE: `TEXT`. The region type identifier.
+* `<region-type>`: TYPE: `TEXT`. The region type identifier. Currently available options are: grass, desert, forest, water, snow, ocean.
 * `<region-name>`: TYPE: `QUOTED_TEXT`. 
 * `<location>`: TYPE: `XYTUPLE`. A tuple representing the X, Y coordinate location of the top-left corner of the region.
 * `<dimensions>`: TYPE: `XYTUPLE`. A tuple representing the width and height of the map in that order.
@@ -141,7 +141,7 @@ Must be in **DEFINTIONS** section.
  
  **Details:** Defines a **Feature**, which is like a landmark, that can be placed on a map.
 * `<feature-type>`: TYPE: `TEXT`. The feature type identifier.
-* `<icon>`: TYPE: `ICON`. One of various icons that the user can select.
+* `<icon>`: TYPE: `ICON`. One of various icons that the user can select. Currently available options are: castle, mountain, wave.
 * `<size>`: TYPE: `TEXT`. One of `SMALL`, `MEDIUM` or `LARGE`.
 
 #### PLACE FEATURE
@@ -166,7 +166,7 @@ Must be in **PLACE AND CALL** section.
 
 **Details:** Calls a function with specified values for the parameters.
 * `<function-name>`: Type: `TEXT`. The name of the function. 
-* `<argument-list>`: Type: `NUMBER`. A list of **0 or more arguments**. If there are at least **2 arguments**, they must be separated with a comma (`,`).
+* `<argument-list>`: Type: `NUMBER`. A list of **1 or more arguments**. If there are at least **2 arguments**, they must be separated with a comma (`,`).
 
 #### ASSIGNMENT
 Must be in a **FUNCTION**, **LOOP**, or **CONDITIONAL**.
