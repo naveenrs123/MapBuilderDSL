@@ -28,10 +28,13 @@ public class MapVariableChecker implements MapVisitor<Map<String, Boolean>, Stri
     @Override
     public String visit(Map<String, Boolean> status, DefineFeature p) {
         String featureIcon = p.getIcon();
-        if (featureIcon.equals("wave") || featureIcon.equals("mountain") || featureIcon.equals("castle")) {
+        String featureSize = p.getSize();
+        if ((featureIcon.equals("wave") || featureIcon.equals("mountain") || featureIcon.equals("castle")) &&
+                (featureSize.equals("LARGE") || featureSize.equals("MEDIUM") || featureSize.equals("SMALL"))) {
             return "";
+        } else {
+            return "Error in feature definition. \n";
         }
-        return "Undefined icon " + featureIcon + "\n";
     }
 
     @Override
@@ -61,7 +64,13 @@ public class MapVariableChecker implements MapVisitor<Map<String, Boolean>, Stri
 
     @Override
     public String visit(Map<String, Boolean> status, PlaceRegion p) {
-        return "";
+        String regionType = p.getRegionType();
+        if ((regionType.equals("grass") || regionType.equals("desert") || regionType.equals("forest")) ||
+                (regionType.equals("water") || regionType.equals("snow") || regionType.equals("ocean"))) {
+            return "";
+        } else {
+            return "Error in region definition. \n";
+        }
     }
 
     @Override
