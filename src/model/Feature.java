@@ -26,6 +26,9 @@ public class Feature implements Cloneable {
         return id;
     }
 
+    public String getIconName() {
+        return iconName;
+    }
 
     public BufferedImage getIcon() {
         if (icon == null) {

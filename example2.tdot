@@ -3,8 +3,8 @@ CREATE MAP {The Hot Desert} WITH DIMENSIONS [200,200] WITH COLOR #00FF80;
 #end map
 
 #start definitions
-DEFINE FEATURE wave WITH ICON {wave} WITH SIZE 1;
-DEFINE FEATURE mountain WITH ICON {mountain} WITH SIZE 1;
+DEFINE FEATURE wave WITH ICON {wave} WITH SIZE SMALL;
+DEFINE FEATURE mountain WITH ICON {mountain} WITH SIZE SMALL;
 DEFINE FUNCTION makeWavesThenMountains (x_start, x_stop):
     PLACE REGION water WITH NAME {Chonky Ocean} WITH LOCATION [100,0] WITH DIMENSIONS [100,200];
 	START LOOP loop1, X FROM x_start TO x_stop INCREMENT BY 10:

@@ -211,9 +211,10 @@ public class ParseTreeToAST extends MapParserBaseVisitor<Node> {
     @Override
     public FunctionCall visitFunction_call(Function_callContext ctx) {
         ArrayList<String> paramValueStrings = new ArrayList<>();
-        List<TerminalNode> textList = ctx.TEXT();
-        String functionName = textList.get(0).getText();
-        ASTHelpers.handleParamList(paramValueStrings, textList);
+        String functionName = ctx.TEXT().getText();
+        for (TerminalNode param : ctx.NUM()) {
+            paramValueStrings.add(param.getText());
+        }
         return new FunctionCall(functionName, paramValueStrings);
     }
 

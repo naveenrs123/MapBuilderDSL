@@ -27,7 +27,7 @@ public class Region extends Placement {
     }
 
 
-    public Point getCorner() {
+    public Point getLocation() {
         return corner;
     }
 
@@ -41,6 +41,10 @@ public class Region extends Placement {
 
     public RegionType getRegionType() {
         return regionType;
+    }
+
+    public String getId() {
+        return this.regionType.getType();
     }
 
     public String getLabel() {

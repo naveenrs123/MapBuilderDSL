@@ -11,8 +11,8 @@ public class PlaceAndCall extends Node {
     }
 
     @Override
-    public <T> T accept(MapVisitor<T> v) {
-        return v.visit(this);
+    public <C,T> T accept(C context, MapVisitor<C,T> v) {
+        return v.visit(context, this);
     }
 
     public ArrayList<Statement> getStatements() {

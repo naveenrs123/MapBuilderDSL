@@ -51,12 +51,12 @@ public class Renderer {
         int y;
         if (!Objects.equals(placement.getRegion(), "map")) {
             Region region = regions.get(placement.getRegion());
-            Point regionCorner = region.getCorner();
-            x = placement.getLocation().x + regionCorner.x;
-            y = placement.getLocation().y + regionCorner.y;
+            Point regionCorner = region.getLocation();
+            x = placement.getWidth() + regionCorner.x;
+            y = placement.getHeight() + regionCorner.y;
         } else {
-            x = placement.getLocation().x;
-            y = placement.getLocation().y;
+            x = placement.getWidth();
+            y = placement.getHeight();
         }
         g2d.drawImage(feature.getIcon(), null, x, y);
         g2d.setPaint(determineLabelColor(new Color(image.getRGB(x, y))));
@@ -72,8 +72,8 @@ public class Renderer {
     private void renderRegion(Region region) {
         BufferedImage image = map.getImage();
         Graphics2D g2d = image.createGraphics();
-        int startX = region.getCorner().x;
-        int startY = region.getCorner().y;
+        int startX = region.getLocation().x;
+        int startY = region.getLocation().y;
         g2d.setPaint(region.getRegionType().getColor());
         for (int x = startX; x<startX+ region.getWidth(); x+=ppp) {
             for (int y = startY; y<startY + region.getHeight(); y+=ppp) {

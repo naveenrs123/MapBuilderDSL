@@ -2,7 +2,7 @@ package ast;
 
 public class Def extends Node {
     @Override
-    public <T> T accept(MapVisitor<T> v) {
+    public <C,T> T accept(C context, MapVisitor<C,T> v) {
         return null;
     }
 }

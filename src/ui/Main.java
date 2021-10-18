@@ -1,5 +1,6 @@
 package ui;
 
+import ast.MapVariableChecker;
 import ast.MapEvaluator;
 import ast.Program;
 import org.antlr.v4.runtime.CharStreams;
@@ -13,12 +14,12 @@ import parser.ParseTreeToAST;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        //MapLexer lexer = new MapLexer(CharStreams.fromFileName("testExpressionAndConditional.tdot"));
         MapLexer lexer = new MapLexer(CharStreams.fromFileName("example3.tdot"));
-        //MapLexer lexer = new MapLexer(CharStreams.fromFileName("testRendering.tdot"));
         for (Token token : lexer.getAllTokens()) {
             System.out.println(token);
         }
@@ -29,10 +30,27 @@ public class Main {
         MapParser parser = new MapParser(tokens);
         ParseTreeToAST visitor = new ParseTreeToAST();
         Program parsedProgram = visitor.visitProgram(parser.program());
-        MapEvaluator<Void> evaluator = new MapEvaluator<>();
-        parsedProgram.accept(evaluator);
-        Renderer renderer = new Renderer(MapEvaluator.map, MapEvaluator.features, MapEvaluator.regions, MapEvaluator.placements);
         System.out.println("Done parsing");
+
+        // Static Check
+        MapVariableChecker checker = new MapVariableChecker();
+        Map<String, Boolean> variables = new HashMap<>();
+        String errors = checker.visit(variables, parsedProgram);
+        if (!errors.isEmpty()) {
+            System.out.println("Static Checks Failed:\n" + errors);
+            System.exit(1);
+        }
+
+        MapEvaluator e = new MapEvaluator();
+        StringBuilder s = new StringBuilder();
+        // Dynamic Check
+        parsedProgram.accept(s,e);
+        if (!s.isEmpty()) {
+            System.out.println("Dynamic check failed: \n" + s.toString());
+            System.exit(1);
+        }
+        System.out.println("Evaluation completed successfully");
+        Renderer renderer = new Renderer(MapEvaluator.map, MapEvaluator.features, MapEvaluator.regions, MapEvaluator.placements);
 
         JFrame frame = new JFrame();
         int mapWidth = MapEvaluator.map.getWidth();

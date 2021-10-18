@@ -43,8 +43,8 @@ public class PlaceFeature extends Statement {
 
 
     @Override
-    public <T> T accept(MapVisitor<T> v) {
-        return v.visit(this);
+    public <C,T> T accept(C context, MapVisitor<C,T> v) {
+        return v.visit(context, this);
     }
 
     @Override

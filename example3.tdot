@@ -11,31 +11,31 @@ DEFINE FEATURE wave WITH ICON {wave} WITH SIZE MEDIUM;
 DEFINE FUNCTION makeMountains (y_start, y_stop, x_start, x_stop):
     START LOOP loop1, Y FROM y_start TO y_stop INCREMENT BY 10:
         START LOOP loop2, X FROM x_start TO x_stop INCREMENT BY 10:
-    		    PLACE FEATURE smallMountain WITH NAME {Blank} WITH LOCATION [X,Y] ON map DISPLAY NAME %FALSE;
+    		    PLACE FEATURE smallMountain WITH NAME {Blank1} WITH LOCATION [X,Y] ON map DISPLAY NAME %FALSE;
     	END LOOP loop2;
     END LOOP loop1;
     START LOOP loop1, Y FROM y_start TO y_stop INCREMENT BY 15:
             START LOOP loop2, X FROM x_start TO x_stop INCREMENT BY 20:
-        		    PLACE FEATURE mediumMountain WITH NAME {Blank} WITH LOCATION [X,Y] ON map DISPLAY NAME %FALSE;
+        		    PLACE FEATURE mediumMountain WITH NAME {Blank2} WITH LOCATION [X,Y] ON map DISPLAY NAME %FALSE;
         	END LOOP loop2;
     END LOOP loop1;
     START LOOP loop1, Y FROM y_start TO y_stop INCREMENT BY 20:
                 START LOOP loop2, X FROM x_start TO x_stop INCREMENT BY 35:
-            		    PLACE FEATURE largeMountain WITH NAME {Blank} WITH LOCATION [X,Y] ON map DISPLAY NAME %FALSE;
+            		    PLACE FEATURE largeMountain WITH NAME {Blank3} WITH LOCATION [X,Y] ON map DISPLAY NAME %FALSE;
             	END LOOP loop2;
     END LOOP loop1;
 END FUNCTION;
 DEFINE FUNCTION makeWaves (x_start, x_stop, y1, y2):
 	START LOOP loop1, X FROM x_start TO x_stop INCREMENT BY 20:
-	     PLACE FEATURE wave WITH NAME {Blank} WITH LOCATION [X,y1] ON region {hehe} DISPLAY NAME %FALSE;
-         PLACE FEATURE wave WITH NAME {Blank} WITH LOCATION [X,y2] ON region {hehe} DISPLAY NAME %FALSE;
+	     PLACE FEATURE wave WITH NAME {Blank4} WITH LOCATION [X,y1] ON region {hehe} DISPLAY NAME %FALSE;
+         PLACE FEATURE wave WITH NAME {Blank5} WITH LOCATION [X,y2] ON region {hehe} DISPLAY NAME %FALSE;
 	END LOOP loop1;
 END FUNCTION;
 
 #end definitions
 
 #start place and call
-PLACE REGION ocean WITH NAME {hehe} WITH LOCATION [0,55] WITH DIMENSIONS [200, 150] DISPLAY NAME %FALSE;
+PLACE REGION ocean WITH NAME {hehe} WITH LOCATION [0,50] WITH DIMENSIONS [200, 150] DISPLAY NAME %FALSE;
 PLACE REGION snow WITH NAME {North Pole} WITH LOCATION [0,0] WITH DIMENSIONS [200, 55] DISPLAY NAME %FALSE;
 PLACE REGION snow WITH NAME {South Pole} WITH LOCATION [0,150] WITH DIMENSIONS [200, 50] DISPLAY NAME %FALSE;
 CALL FUNCTION makeMountains(0, 50, 0, 200);
